@@ -1,0 +1,4 @@
+# Les scripts shell doivent garder des fins de ligne LF (Unix),
+# sinon bash sur le serveur Linux plante avec une erreur du genre
+# "/usr/bin/env: 'bash\r': No such file or directory".
+*.sh text eol=lf

@@ -1,0 +1,244 @@
+{
+  "header": {
+    "title": "MANGA",
+    "titleAccent": "TRACKER",
+    "subtitle": "Trouve des deals. Économise. Construis ta collection.",
+    "open": "Ouvrir",
+    "save": "Sauver",
+    "reset": "Reset",
+    "invalidJson": "Fichier JSON invalide"
+  },
+  "dealModal": {
+    "newDeal": "Nouveau Deal",
+    "editDeal": "Modifier Deal",
+    "seriesName": "Nom de la série",
+    "seriesPlaceholder": "ex. Chainsaw Man, One Piece...",
+    "seriesRequired": "Le nom de la série est obligatoire",
+    "volumes": "Tomes",
+    "totalVols": "Total tomes",
+    "optional": "opt",
+    "price": "Prix (€)",
+    "newPricePerVol": "€/tome neuf",
+    "completeSeries": "Série complète ({{current}}/{{total}} tomes)",
+    "partialSeries": "{{current}} sur {{total}} tomes ({{percent}}%)",
+    "advancedOptions": "Options avancées",
+    "vintedUrl": "Lien Vinted",
+    "condition": "État",
+    "rarity": "Rareté",
+    "listingAge": "Ancienneté",
+    "cancel": "Annuler",
+    "save": "Sauver",
+    "addDeal": "Ajouter",
+    "preview": {
+      "complete": "Complet",
+      "partial": "Partiel",
+      "perVol": "€/tome",
+      "off": "de réduction",
+      "saved": "économisés",
+      "fillFields": "Remplis le formulaire pour voir l'analyse"
+    }
+  },
+  "condition": {
+    "new": "Neuf",
+    "likeNew": "TBE",
+    "good": "BE",
+    "fair": "Acceptable"
+  },
+  "rarity": {
+    "common": "Courant",
+    "sought": "Recherché",
+    "rare": "Rare"
+  },
+  "listingAge": {
+    "thisWeek": "Cette semaine",
+    "oneMonth": "1 mois",
+    "monthsOld": "Plusieurs mois"
+  },
+  "dealTable": {
+    "active": "ACTIFS",
+    "bought": "ACHETÉS",
+    "missed": "RATÉS",
+    "add": "Ajouter",
+    "series": "Série",
+    "vols": "Tomes",
+    "saved": "Économie",
+    "score": "Score",
+    "status": "Statut",
+    "total": "Total",
+    "potential": "potentiel",
+    "lost": "perdu",
+    "noActiveDeals": "Aucun deal actif",
+    "noPurchases": "Aucun achat pour l'instant",
+    "noMissedDeals": "Aucun deal raté !"
+  },
+  "emptyState": {
+    "activeHint": "Trouve des deals sur Vinted et suis-les ici pour comparer les prix",
+    "boughtHint": "Quand tu achètes un deal, change son statut pour voir tes économies",
+    "missedHint": "Tu n'as encore raté aucun deal. Continue comme ça !",
+    "addFirst": "Ajoute ton premier deal"
+  },
+  "dealRow": {
+    "active": "Actif",
+    "bought": "Acheté",
+    "missed": "Raté",
+    "doubleClickEdit": "Double-clic pour modifier",
+    "total": "Total",
+    "newPrice": "Neuf",
+    "editAllFields": "Modifier tous les champs",
+    "delete": "Supprimer",
+    "openVinted": "Ouvrir sur Vinted"
+  },
+  "scoring": {
+    "quality": {
+      "exceptional": "Exceptionnel",
+      "veryGood": "Très bon",
+      "goodDeal": "Bon deal",
+      "decent": "Correct",
+      "average": "Moyen",
+      "bad": "Mauvais"
+    },
+    "economy": {
+      "massive": "Économie massive",
+      "big": "Grosse économie",
+      "nice": "Belle économie",
+      "decent": "Économie correcte",
+      "small": "Petite économie",
+      "negligible": "Économie négligeable"
+    },
+    "recommendation": {
+      "goForIt": "FONCE !",
+      "greatDeal": "Très bonne affaire",
+      "goodDeal": "Bonne affaire",
+      "decentDeal": "Deal correct",
+      "tryNegotiating": "Essaie de négocier",
+      "skip": "Passe ton chemin"
+    },
+    "negotiateTo": "Négocie à {{price}}€"
+  },
+  "insights": {
+    "title": "Insights",
+    "less": "Moins",
+    "more": "+{{count}} de plus",
+    "active": "Actifs",
+    "bought": "Achetés",
+    "missed": "Ratés",
+    "bestDeal": "Meilleur Deal",
+    "potential": "potentiel",
+    "saved": "économisés",
+    "lost": "perdu"
+  },
+  "budget": {
+    "title": "Budget Deals Actifs",
+    "items": "Articles",
+    "shipping": "Livraison",
+    "volumes": "Tomes",
+    "saving": "Économie",
+    "vsNew": "vs Neuf"
+  },
+  "compare": {
+    "title": "Comparer",
+    "dealsSelected": "{{count}} deals sélectionnés",
+    "price": "Prix",
+    "volumes": "Tomes",
+    "pricePerVol": "€/tome",
+    "percentOff": "% réduction",
+    "condition": "État",
+    "best": "Meilleur",
+    "clearSelection": "Effacer sélection",
+    "done": "Terminé",
+    "cancel": "Annuler",
+    "button": "Comparer",
+    "maxReached": "Maximum 3 deals pour comparer"
+  },
+  "shortcuts": {
+    "title": "Raccourcis",
+    "newDeal": "Nouveau deal",
+    "search": "Rechercher",
+    "compare": "Comparer",
+    "active": "Actifs",
+    "bought": "Achetés",
+    "missed": "Ratés",
+    "all": "Tous",
+    "close": "Fermer"
+  },
+  "resetModal": {
+    "title": "Tout réinitialiser ?",
+    "subtitle": "Cette action est irréversible",
+    "message": "Tu vas supprimer <strong>tous les {{count}} deals</strong>. Toutes les données seront perdues.",
+    "cancel": "Annuler",
+    "deleteAll": "Tout supprimer"
+  },
+  "deleteModal": {
+    "title": "Supprimer Deal",
+    "message": "Supprimer <strong>{{name}}</strong> ?",
+    "subtitle": "Cette action est irréversible",
+    "cancel": "Annuler",
+    "delete": "Supprimer"
+  },
+  "recommendations": {
+    "exceptionalDeals": "{{count}} deal(s) exceptionnel(s) (90+) : {{names}}. Achète maintenant !",
+    "urgentDeals": "{{count}} deal(s) urgent(s) : {{names}}. Articles rares, ça va partir !",
+    "stalledDeals": "{{count}} bon(s) deal(s) en attente depuis 7+ jours. Ils risquent de partir !",
+    "expensiveDeal": "\"{{name}}\" à {{price}}€/tome est cher. Propose {{target}}€ (-15%).",
+    "badCondition": "{{count}} deal(s) en état acceptable. Demande des photos détaillées avant d'acheter.",
+    "missingVol1": "{{count}} lot(s) sans le tome 1 : {{names}}. Assure-toi d'avoir les premiers tomes !",
+    "lowScore": "\"{{name}}\" ({{score}}/100) est surévalué. Prix max : {{ideal}}€ (actuellement {{current}}€).",
+    "oldListings": "{{count}} annonce(s) ancienne(s) = vendeur motivé ! {{suggestions}}",
+    "weekOldListings": "{{count}} annonce(s) en ligne depuis des semaines. Propose -10%.",
+    "improvableTip": "\"{{name}}\" ({{score}}) : {{tip}}",
+    "compareSeries": "{{count}}x \"{{name}}\" : choisis {{bestPrice}}€/tome ({{bestScore}}pts) plutôt que {{worstPrice}}€/tome ({{worstScore}}pts)",
+    "successRate": "Taux de réussite : {{rate}}%. {{count}} deals ratés ({{amount}}€). Active les alertes Vinted !",
+    "lowAvgScore": "Score moyen : {{score}}/100. Conseil : vise les lots de 10+ tomes pour de meilleurs deals.",
+    "duplicates": "{{count}} série(s) déjà possédée(s). Attention aux doublons !",
+    "highBudget": "Budget : {{amount}}€. Priorité : {{names}}",
+    "smallLots": "{{count}} petits lots (≤3 tomes). Frais de port estimés : ~{{shipping}}€. Préfère les gros lots !",
+    "goodCollection": "{{count}} tomes suivis ! Économies potentielles : {{savings}}€ ({{percent}}% de réduction).",
+    "congrats": "Bravo ! {{count}} achats, {{volumes}} tomes, {{saved}}€ économisés !",
+    "welcome": "Bienvenue ! Ajoute tes premiers deals et compare les prix pour trouver les meilleures offres.",
+    "proTip": "Astuce pro : Les meilleurs deals ont ≤35% du prix neuf, 10+ tomes, état Neuf/TBE.",
+    "tips": {
+      "offerDiscount": "propose {{price}}€ (-15%)",
+      "lookBiggerLot": "cherche un plus gros lot (+{{vols}} tomes = +{{pts}} pts)",
+      "askCondition": "demande l'état (+3 pts si Neuf)",
+      "acceptableDiscount": "\"Acceptable\" = -12 pts, demande une réduction",
+      "goodDiscount": "\"BE\" = -5 pts, négocie pour compenser"
+    }
+  },
+  "toast": {
+    "deleted": "\"{{name}}\" supprimé",
+    "undo": "Annuler",
+    "restored": "Deal restauré"
+  },
+  "stats": {
+    "title": "Statistiques",
+    "scoreDistribution": "Distribution des scores (Actifs)",
+    "clickToFilter": "Cliquer pour filtrer",
+    "clearFilter": "Effacer le filtre",
+    "avgScore": "Score moyen",
+    "avgPriceVol": "€/tome moyen",
+    "activeVols": "Tomes actifs",
+    "ownedVols": "Tomes possédés",
+    "saved": "Économisés",
+    "missed": "Ratés"
+  },
+  "legend": {
+    "title": "Comment le score fonctionne",
+    "scoreQuality": "Score = Qualité",
+    "greatDeal": "Super deal",
+    "goodDeal": "Bon deal",
+    "okay": "Correct",
+    "pass": "Passe",
+    "pricePoints": "Prix (70pts)",
+    "priceDesc": "Plus d'économies = meilleur score",
+    "conditionPoints": "État (15pts)",
+    "conditionNew": "Neuf",
+    "conditionLikeNew": "TBE",
+    "conditionGood": "BE",
+    "conditionFair": "Acceptable",
+    "other": "Autres",
+    "coverage": "Couverture",
+    "rarity": "Rareté",
+    "listingAge": "Ancienneté",
+    "upTo": "jusqu'à"
+  }
+}

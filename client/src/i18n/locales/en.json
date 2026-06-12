@@ -1,0 +1,244 @@
+{
+  "header": {
+    "title": "MANGA",
+    "titleAccent": "TRACKER",
+    "subtitle": "Find deals. Save money. Build your collection.",
+    "open": "Open",
+    "save": "Save",
+    "reset": "Reset",
+    "invalidJson": "Invalid JSON file"
+  },
+  "dealModal": {
+    "newDeal": "New Deal",
+    "editDeal": "Edit Deal",
+    "seriesName": "Series Name",
+    "seriesPlaceholder": "e.g. Chainsaw Man, One Piece...",
+    "seriesRequired": "Series name is required",
+    "volumes": "Volumes",
+    "totalVols": "Total Vols",
+    "optional": "opt",
+    "price": "Price (€)",
+    "newPricePerVol": "New €/vol",
+    "completeSeries": "Complete series ({{current}}/{{total}} vols)",
+    "partialSeries": "{{current}} of {{total}} vols ({{percent}}%)",
+    "advancedOptions": "Advanced options",
+    "vintedUrl": "Vinted Link",
+    "condition": "Condition",
+    "rarity": "Rarity",
+    "listingAge": "Listing Age",
+    "cancel": "Cancel",
+    "save": "Save",
+    "addDeal": "Add Deal",
+    "preview": {
+      "complete": "Complete",
+      "partial": "Partial",
+      "perVol": "€/vol",
+      "off": "off",
+      "saved": "saved",
+      "fillFields": "Fill in the form to see the analysis"
+    }
+  },
+  "condition": {
+    "new": "New",
+    "likeNew": "Like New",
+    "good": "Good",
+    "fair": "Fair"
+  },
+  "rarity": {
+    "common": "Common",
+    "sought": "Sought",
+    "rare": "Rare"
+  },
+  "listingAge": {
+    "thisWeek": "This week",
+    "oneMonth": "1 month",
+    "monthsOld": "Months old"
+  },
+  "dealTable": {
+    "active": "ACTIVE",
+    "bought": "BOUGHT",
+    "missed": "MISSED",
+    "add": "Add",
+    "series": "Series",
+    "vols": "Vols",
+    "saved": "Saved",
+    "score": "Score",
+    "status": "Status",
+    "total": "Total",
+    "potential": "potential",
+    "lost": "lost",
+    "noActiveDeals": "No active deals yet",
+    "noPurchases": "No purchases yet",
+    "noMissedDeals": "No missed deals!"
+  },
+  "emptyState": {
+    "activeHint": "Find deals on Vinted and track them here to compare prices",
+    "boughtHint": "When you buy a deal, change its status to see your savings",
+    "missedHint": "You haven't missed any deals yet. Keep it up!",
+    "addFirst": "Add your first deal"
+  },
+  "dealRow": {
+    "active": "Active",
+    "bought": "Bought",
+    "missed": "Missed",
+    "doubleClickEdit": "Double-click to edit",
+    "total": "Total",
+    "newPrice": "New",
+    "editAllFields": "Edit all fields",
+    "delete": "Delete",
+    "openVinted": "Open on Vinted"
+  },
+  "scoring": {
+    "quality": {
+      "exceptional": "Exceptional",
+      "veryGood": "Very good",
+      "goodDeal": "Good deal",
+      "decent": "Decent",
+      "average": "Average",
+      "bad": "Bad"
+    },
+    "economy": {
+      "massive": "Massive savings",
+      "big": "Big savings",
+      "nice": "Nice savings",
+      "decent": "Decent savings",
+      "small": "Small savings",
+      "negligible": "Negligible savings"
+    },
+    "recommendation": {
+      "goForIt": "GO FOR IT!",
+      "greatDeal": "Great deal",
+      "goodDeal": "Good deal",
+      "decentDeal": "Decent deal",
+      "tryNegotiating": "Try negotiating",
+      "skip": "Skip this one"
+    },
+    "negotiateTo": "Negotiate to {{price}}€"
+  },
+  "insights": {
+    "title": "Insights",
+    "less": "Less",
+    "more": "+{{count}} more",
+    "active": "Active",
+    "bought": "Bought",
+    "missed": "Missed",
+    "bestDeal": "Best Deal",
+    "potential": "potential",
+    "saved": "saved",
+    "lost": "lost"
+  },
+  "budget": {
+    "title": "Active Deals Budget",
+    "items": "Items",
+    "shipping": "Shipping",
+    "volumes": "Volumes",
+    "saving": "Saving",
+    "vsNew": "vs New"
+  },
+  "compare": {
+    "title": "Compare",
+    "dealsSelected": "{{count}} deals selected",
+    "price": "Price",
+    "volumes": "Volumes",
+    "pricePerVol": "€/vol",
+    "percentOff": "% off",
+    "condition": "Condition",
+    "best": "Best",
+    "clearSelection": "Clear selection",
+    "done": "Done",
+    "cancel": "Cancel",
+    "button": "Compare",
+    "maxReached": "Maximum 3 deals for comparison"
+  },
+  "shortcuts": {
+    "title": "Shortcuts",
+    "newDeal": "New deal",
+    "search": "Search",
+    "compare": "Compare",
+    "active": "Active",
+    "bought": "Bought",
+    "missed": "Missed",
+    "all": "All",
+    "close": "Close"
+  },
+  "resetModal": {
+    "title": "Reset Everything?",
+    "subtitle": "This cannot be undone",
+    "message": "You're about to delete <strong>all {{count}} deals</strong>. All data will be lost.",
+    "cancel": "Cancel",
+    "deleteAll": "Delete All"
+  },
+  "deleteModal": {
+    "title": "Delete Deal",
+    "message": "Delete <strong>{{name}}</strong>?",
+    "subtitle": "This cannot be undone",
+    "cancel": "Cancel",
+    "delete": "Delete"
+  },
+  "recommendations": {
+    "exceptionalDeals": "{{count}} exceptional deal(s) (90+): {{names}}. Buy now!",
+    "urgentDeals": "{{count}} urgent deal(s): {{names}}. Rare items, won't last!",
+    "stalledDeals": "{{count}} good deal(s) waiting 7+ days. They might sell soon!",
+    "expensiveDeal": "\"{{name}}\" at {{price}}€/vol is expensive. Offer {{target}}€ (-15%).",
+    "badCondition": "{{count}} deal(s) in fair condition. Ask for detailed photos before buying.",
+    "missingVol1": "{{count}} lot(s) missing Vol.1: {{names}}. Make sure you have the first volumes!",
+    "lowScore": "\"{{name}}\" ({{score}}/100) is overpriced. Max price: {{ideal}}€ (currently {{current}}€).",
+    "oldListings": "{{count}} old listing(s) = motivated seller! {{suggestions}}",
+    "weekOldListings": "{{count}} listing(s) online for weeks. Try offering -10%.",
+    "improvableTip": "\"{{name}}\" ({{score}}): {{tip}}",
+    "compareSeries": "{{count}}x \"{{name}}\": pick {{bestPrice}}€/vol ({{bestScore}}pts) over {{worstPrice}}€/vol ({{worstScore}}pts)",
+    "successRate": "Success rate: {{rate}}%. Missed {{count}} deals ({{amount}}€). Enable Vinted alerts!",
+    "lowAvgScore": "Avg score: {{score}}/100. Tip: target lots with 10+ volumes for better deals.",
+    "duplicates": "{{count}} series already owned. Watch out for duplicates!",
+    "highBudget": "Budget: {{amount}}€. Prioritize: {{names}}",
+    "smallLots": "{{count}} small lots (≤3 vols). Estimated shipping: ~{{shipping}}€. Prefer bigger lots!",
+    "goodCollection": "{{count}} volumes tracked! Potential savings: {{savings}}€ ({{percent}}% off retail).",
+    "congrats": "Nice! {{count}} purchases, {{volumes}} volumes, {{saved}}€ saved!",
+    "welcome": "Welcome! Add your first deals and compare prices to find the best offers.",
+    "proTip": "Pro tip: Best deals have ≤35% ratio, 10+ volumes, Mint/Like New condition.",
+    "tips": {
+      "offerDiscount": "offer {{price}}€ (-15%)",
+      "lookBiggerLot": "look for bigger lot (+{{vols}} vols = +{{pts}} pts)",
+      "askCondition": "ask about condition (+3 pts if Mint)",
+      "acceptableDiscount": "\"Acceptable\" = -12 pts, demand extra discount",
+      "goodDiscount": "\"Good\" = -5 pts, negotiate to compensate"
+    }
+  },
+  "toast": {
+    "deleted": "\"{{name}}\" deleted",
+    "undo": "Undo",
+    "restored": "Deal restored"
+  },
+  "stats": {
+    "title": "Statistics",
+    "scoreDistribution": "Score Distribution (Active)",
+    "clickToFilter": "Click to filter",
+    "clearFilter": "Clear filter",
+    "avgScore": "Avg Score",
+    "avgPriceVol": "Avg €/vol",
+    "activeVols": "Active Vols",
+    "ownedVols": "Owned Vols",
+    "saved": "Saved",
+    "missed": "Missed"
+  },
+  "legend": {
+    "title": "How scoring works",
+    "scoreQuality": "Score = Quality",
+    "greatDeal": "Great deal",
+    "goodDeal": "Good deal",
+    "okay": "Okay",
+    "pass": "Pass",
+    "pricePoints": "Price (70pts)",
+    "priceDesc": "More savings = higher score",
+    "conditionPoints": "Condition (15pts)",
+    "conditionNew": "New",
+    "conditionLikeNew": "Like New",
+    "conditionGood": "Good",
+    "conditionFair": "Fair",
+    "other": "Other",
+    "coverage": "Coverage",
+    "rarity": "Rarity",
+    "listingAge": "Listing age",
+    "upTo": "up to"
+  }
+}
