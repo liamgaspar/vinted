@@ -69,7 +69,7 @@ export function DealFilters() {
       <div className="mt-4 flex items-center justify-between">
         <button
           onClick={resetFilters}
-          className="px-4 py-2 border-2 border-zinc-300 dark:border-zinc-700 hover:border-accent hover:text-accent rounded-lg text-sm font-medium transition-colors text-zinc-600 dark:text-zinc-400"
+          className="px-4 py-2 border-2 border-zinc-300 dark:border-zinc-700 hover:border-accent hover:text-accent rounded-lg text-sm font-medium transition-[color,border-color,transform] active:scale-[0.96] text-zinc-600 dark:text-zinc-400"
         >
           Reset
         </button>

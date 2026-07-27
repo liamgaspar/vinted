@@ -243,7 +243,7 @@ export const DealRow = memo(function DealRow({
           value={deal.etat}
           onChange={(e) => updateStatus(deal.id, e.target.value as DealStatus)}
           onClick={(e) => e.stopPropagation()}
-          className={`px-2 py-1 rounded text-xs font-bold border-2 cursor-pointer transition-all ${
+          className={`px-2 py-1 rounded text-xs font-bold border-2 cursor-pointer transition-colors ${
             deal.etat === 'Acheté'
               ? 'bg-green-500/10 text-green-600 border-green-500'
               : deal.etat === 'Raté'
@@ -259,13 +259,13 @@ export const DealRow = memo(function DealRow({
 
       {/* Actions - visible on mobile (hover:none), hidden until hover on desktop */}
       <td className="px-3 py-3 text-center w-24">
-        <div className="flex items-center justify-end gap-1 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
+        <div className="flex items-center justify-end gap-1.5 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
           {deal.url && (
             <a
               href={deal.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="p-1.5 hover:bg-green-500/10 rounded text-zinc-400 hover:text-green-500 transition-colors"
+              className="p-2 hover:bg-green-500/10 rounded text-zinc-400 hover:text-green-500 transition-[color,background-color,transform] active:scale-[0.96]"
               title={t('dealRow.openVinted')}
               onClick={(e) => e.stopPropagation()}
             >
@@ -274,14 +274,14 @@ export const DealRow = memo(function DealRow({
           )}
           <button
             onClick={() => openEditModal(deal)}
-            className="p-1.5 hover:bg-accent/10 rounded text-zinc-400 hover:text-accent transition-colors"
+            className="p-2 hover:bg-accent/10 rounded text-zinc-400 hover:text-accent transition-[color,background-color,transform] active:scale-[0.96]"
             title={t('dealRow.editAllFields')}
           >
             <Pencil size={14} />
           </button>
           <button
             onClick={handleDelete}
-            className="p-1.5 hover:bg-red-500/10 rounded text-zinc-400 hover:text-red-500 transition-colors"
+            className="p-2 hover:bg-red-500/10 rounded text-zinc-400 hover:text-red-500 transition-[color,background-color,transform] active:scale-[0.96]"
             title={t('dealRow.delete')}
           >
             <Trash2 size={14} />

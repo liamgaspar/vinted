@@ -12,6 +12,8 @@ export function DealModal() {
   const { addDeal, updateDeal } = useDealsStore();
 
   const [seriesError, setSeriesError] = useState(false);
+  const [visible, setVisible] = useState(false);
+  const [exiting, setExiting] = useState(false);
   const [form, setForm] = useState<DealInput>({
     serie: '',
     tomes: 1,
@@ -72,7 +74,22 @@ export function DealModal() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [showDealModal, closeModal]);
 
-  if (!showDealModal) return null;
+  // Enter/exit animation
+  useEffect(() => {
+    if (showDealModal) {
+      setVisible(true);
+      setExiting(false);
+    } else if (visible) {
+      setExiting(true);
+      const timer = setTimeout(() => {
+        setVisible(false);
+        setExiting(false);
+      }, 120);
+      return () => clearTimeout(timer);
+    }
+  }, [showDealModal, visible]);
+
+  if (!visible) return null;
 
   const handleSave = () => {
     if (!form.serie.trim()) {
@@ -114,21 +131,25 @@ export function DealModal() {
 
   return (
     <div
-      className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+      className={`fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 ${
+        exiting ? 'animate-backdrop-out' : 'animate-backdrop-in'
+      }`}
       onClick={closeModal}
     >
       <div
-        className="bg-white dark:bg-zinc-900 border-2 border-zinc-200 dark:border-zinc-800 rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto"
+        className={`bg-white dark:bg-zinc-900 border-2 border-zinc-200 dark:border-zinc-800 rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto ${
+          exiting ? 'animate-modal-out' : 'animate-modal-in'
+        }`}
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
         <div className="px-6 py-4 border-b-2 border-zinc-100 dark:border-zinc-800 flex items-center justify-between">
-          <h3 className="text-xl font-black text-zinc-900 dark:text-white">
+          <h3 className="text-xl font-black text-zinc-900 dark:text-white text-balance">
             {editingDeal ? t('dealModal.editDeal') : t('dealModal.newDeal')}
           </h3>
           <button
             onClick={closeModal}
-            className="text-zinc-400 hover:text-accent rounded-lg p-1 transition-colors"
+            className="w-10 h-10 flex items-center justify-center text-zinc-400 hover:text-accent rounded-lg transition-colors"
           >
             <X size={24} />
           </button>
@@ -151,7 +172,7 @@ export function DealModal() {
                     if (seriesError && e.target.value.trim()) setSeriesError(false);
                   }}
                   placeholder={t('dealModal.seriesPlaceholder')}
-                  className={`w-full px-4 py-3 border-2 rounded-lg text-lg focus:outline-none transition-all bg-white dark:bg-zinc-800 dark:text-white dark:placeholder-zinc-500 ${
+                  className={`w-full px-4 py-3 border-2 rounded-lg text-lg focus:outline-none transition-colors bg-white dark:bg-zinc-800 dark:text-white dark:placeholder-zinc-500 ${
                     seriesError
                       ? 'border-red-500 focus:border-red-500'
                       : 'border-zinc-200 dark:border-zinc-700 focus:border-accent'
@@ -178,7 +199,7 @@ export function DealModal() {
                     value={form.url || ''}
                     onChange={(e) => setForm({ ...form, url: e.target.value || undefined })}
                     placeholder="https://www.vinted.fr/items/..."
-                    className="w-full pl-10 pr-4 py-3 border-2 border-zinc-200 dark:border-zinc-700 rounded-lg focus:border-accent focus:outline-none transition-all bg-white dark:bg-zinc-800 dark:text-white dark:placeholder-zinc-500"
+                    className="w-full pl-10 pr-4 py-3 border-2 border-zinc-200 dark:border-zinc-700 rounded-lg focus:border-accent focus:outline-none transition-colors bg-white dark:bg-zinc-800 dark:text-white dark:placeholder-zinc-500"
                   />
                   {form.url && (
                     <a
@@ -205,7 +226,7 @@ export function DealModal() {
                     min="1"
                     value={form.tomes}
                     onChange={(e) => setForm({ ...form, tomes: parseInt(e.target.value) || 1 })}
-                    className="w-full px-4 py-3 border-2 border-zinc-200 dark:border-zinc-700 rounded-lg text-lg focus:border-accent focus:outline-none transition-all bg-white dark:bg-zinc-800 dark:text-white"
+                    className="w-full px-4 py-3 border-2 border-zinc-200 dark:border-zinc-700 rounded-lg text-lg focus:border-accent focus:outline-none transition-colors bg-white dark:bg-zinc-800 dark:text-white"
                   />
                 </div>
                 <div>
@@ -224,7 +245,7 @@ export function DealModal() {
                         tomesTotal: val > 0 ? val : undefined,
                       });
                     }}
-                    className="w-full px-4 py-3 border-2 border-zinc-200 dark:border-zinc-700 rounded-lg text-lg focus:border-accent focus:outline-none transition-all bg-white dark:bg-zinc-800 dark:text-white dark:placeholder-zinc-500"
+                    className="w-full px-4 py-3 border-2 border-zinc-200 dark:border-zinc-700 rounded-lg text-lg focus:border-accent focus:outline-none transition-colors bg-white dark:bg-zinc-800 dark:text-white dark:placeholder-zinc-500"
                   />
                 </div>
                 <div>
@@ -237,7 +258,7 @@ export function DealModal() {
                     step="0.5"
                     value={form.prix}
                     onChange={(e) => setForm({ ...form, prix: parseFloat(e.target.value) || 0 })}
-                    className="w-full px-4 py-3 border-2 border-zinc-200 dark:border-zinc-700 rounded-lg text-lg focus:border-accent focus:outline-none transition-all bg-white dark:bg-zinc-800 dark:text-white"
+                    className="w-full px-4 py-3 border-2 border-zinc-200 dark:border-zinc-700 rounded-lg text-lg focus:border-accent focus:outline-none transition-colors bg-white dark:bg-zinc-800 dark:text-white"
                   />
                 </div>
                 <div>
@@ -250,7 +271,7 @@ export function DealModal() {
                     step="0.1"
                     value={form.prixNeuf}
                     onChange={(e) => setForm({ ...form, prixNeuf: parseFloat(e.target.value) || 0 })}
-                    className="w-full px-4 py-3 border-2 border-zinc-200 dark:border-zinc-700 rounded-lg text-lg focus:border-accent focus:outline-none transition-all bg-white dark:bg-zinc-800 dark:text-white"
+                    className="w-full px-4 py-3 border-2 border-zinc-200 dark:border-zinc-700 rounded-lg text-lg focus:border-accent focus:outline-none transition-colors bg-white dark:bg-zinc-800 dark:text-white"
                   />
                 </div>
               </div>
@@ -286,7 +307,7 @@ export function DealModal() {
                           etatPhysique: form.etatPhysique === opt.value ? undefined : opt.value,
                         })
                       }
-                      className={`px-3 py-2 rounded-lg text-sm font-medium border-2 transition-all ${
+                      className={`px-3 py-2 rounded-lg text-sm font-medium border-2 transition-[color,background-color,border-color,transform] active:scale-[0.96] ${
                         form.etatPhysique === opt.value
                           ? opt.value === 'Neuf'
                             ? 'bg-green-500/10 text-green-600 border-green-500'
@@ -325,7 +346,7 @@ export function DealModal() {
                           rarete: form.rarete === opt.value ? undefined : opt.value,
                         })
                       }
-                      className={`px-3 py-2 rounded-lg text-sm font-medium border-2 transition-all ${
+                      className={`px-3 py-2 rounded-lg text-sm font-medium border-2 transition-[color,background-color,border-color,transform] active:scale-[0.96] ${
                         form.rarete === opt.value
                           ? opt.value === 'Rare'
                             ? 'bg-purple-500/10 text-purple-600 border-purple-500'
@@ -356,7 +377,7 @@ export function DealModal() {
                           anciennete: form.anciennete === opt.value ? undefined : opt.value,
                         })
                       }
-                      className={`px-3 py-2 rounded-lg text-sm font-medium border-2 transition-all ${
+                      className={`px-3 py-2 rounded-lg text-sm font-medium border-2 transition-[color,background-color,border-color,transform] active:scale-[0.96] ${
                         form.anciennete === opt.value
                           ? opt.value === 'ancien'
                             ? 'bg-green-500/10 text-green-600 border-green-500'
@@ -385,7 +406,7 @@ export function DealModal() {
                   <div className={`rounded-lg p-4 border-2 ${getScoreBgClass(preview.score)}`}>
                     {/* Score */}
                     <div className="flex items-center gap-4 mb-4">
-                      <div className={`text-5xl font-black ${getScoreColorClass(preview.score)}`}>
+                      <div className={`text-5xl font-black tabular-nums ${getScoreColorClass(preview.score)}`}>
                         {preview.score}
                       </div>
                       <div className="flex-1">
@@ -403,15 +424,15 @@ export function DealModal() {
                     {/* Stats */}
                     <div className="grid grid-cols-3 gap-2 mb-4 text-center">
                       <div className="bg-white/50 dark:bg-zinc-900/50 rounded-lg p-2">
-                        <div className="text-lg font-bold text-zinc-900 dark:text-white">{preview.prixParTome.toFixed(2)}€</div>
+                        <div className="text-lg font-bold text-zinc-900 dark:text-white tabular-nums">{preview.prixParTome.toFixed(2)}€</div>
                         <div className="text-xs text-zinc-500">{t('dealModal.preview.perVol')}</div>
                       </div>
                       <div className="bg-white/50 dark:bg-zinc-900/50 rounded-lg p-2">
-                        <div className="text-lg font-bold text-green-600">{preview.pourcentage}%</div>
+                        <div className="text-lg font-bold text-green-600 tabular-nums">{preview.pourcentage}%</div>
                         <div className="text-xs text-zinc-500">{t('dealModal.preview.off')}</div>
                       </div>
                       <div className="bg-white/50 dark:bg-zinc-900/50 rounded-lg p-2">
-                        <div className="text-lg font-bold text-green-600">{preview.economie.toFixed(0)}€</div>
+                        <div className="text-lg font-bold text-green-600 tabular-nums">{preview.economie.toFixed(0)}€</div>
                         <div className="text-xs text-zinc-500">{t('dealModal.preview.saved')}</div>
                       </div>
                     </div>
@@ -467,13 +488,13 @@ export function DealModal() {
         <div className="px-6 py-4 border-t-2 border-zinc-100 dark:border-zinc-800 flex gap-3">
           <button
             onClick={closeModal}
-            className="flex-1 px-4 py-3 border-2 border-zinc-300 dark:border-zinc-700 hover:border-zinc-400 rounded-lg font-medium transition-colors text-zinc-600 dark:text-zinc-400"
+            className="flex-1 px-4 py-3 border-2 border-zinc-300 dark:border-zinc-700 hover:border-zinc-400 rounded-lg font-medium transition-[color,border-color,transform] active:scale-[0.96] text-zinc-600 dark:text-zinc-400"
           >
             {t('dealModal.cancel')}
           </button>
           <button
             onClick={handleSave}
-            className="flex-1 px-4 py-3 bg-accent hover:bg-accent/90 text-white rounded-lg font-bold transition-all"
+            className="flex-1 px-4 py-3 bg-accent hover:bg-accent/90 text-white rounded-lg font-bold transition-[background-color,transform] active:scale-[0.96]"
           >
             {editingDeal ? t('dealModal.save') : t('dealModal.addDeal')}
           </button>
