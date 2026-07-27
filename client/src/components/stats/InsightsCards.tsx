@@ -15,10 +15,10 @@ export function InsightsCards({ insights }: InsightsCardsProps) {
         <div className="text-xs font-medium text-muted dark:text-muted-dark uppercase tracking-wider mb-1">
           {t('insights.active')}
         </div>
-        <div className="text-4xl font-black text-zinc-900 dark:text-white group-hover:text-accent transition-colors">
+        <div className="text-4xl font-black text-zinc-900 dark:text-white group-hover:text-accent transition-colors tabular-nums">
           {insights.totalActifs}
         </div>
-        <div className="text-sm text-muted dark:text-muted-dark mt-2">
+        <div className="text-sm text-muted dark:text-muted-dark mt-2 tabular-nums">
           {insights.economieActifs.toFixed(0)}€ {t('insights.potential')}
         </div>
       </div>
@@ -28,10 +28,10 @@ export function InsightsCards({ insights }: InsightsCardsProps) {
         <div className="text-xs font-medium text-muted dark:text-muted-dark uppercase tracking-wider mb-1">
           {t('insights.bought')}
         </div>
-        <div className="text-4xl font-black text-zinc-900 dark:text-white group-hover:text-green-500 transition-colors">
+        <div className="text-4xl font-black text-zinc-900 dark:text-white group-hover:text-green-500 transition-colors tabular-nums">
           {insights.totalAchetes}
         </div>
-        <div className="text-sm text-green-600 dark:text-green-400 mt-2 font-medium">
+        <div className="text-sm text-green-600 dark:text-green-400 mt-2 font-medium tabular-nums">
           {insights.economieRealisee.toFixed(0)}€ {t('insights.saved')}
         </div>
       </div>
@@ -41,10 +41,10 @@ export function InsightsCards({ insights }: InsightsCardsProps) {
         <div className="text-xs font-medium text-muted dark:text-muted-dark uppercase tracking-wider mb-1">
           {t('insights.missed')}
         </div>
-        <div className="text-4xl font-black text-zinc-900 dark:text-white group-hover:text-red-500 transition-colors">
+        <div className="text-4xl font-black text-zinc-900 dark:text-white group-hover:text-red-500 transition-colors tabular-nums">
           {insights.totalRates}
         </div>
-        <div className="text-sm text-red-500 mt-2 font-medium">
+        <div className="text-sm text-red-500 mt-2 font-medium tabular-nums">
           {insights.economieRatee.toFixed(0)}€ {t('insights.lost')}
         </div>
       </div>
@@ -57,7 +57,7 @@ export function InsightsCards({ insights }: InsightsCardsProps) {
         <div className="text-lg font-bold text-zinc-900 dark:text-white truncate">
           {insights.meilleurActif?.serie || '—'}
         </div>
-        <div className="text-3xl font-black text-accent mt-1">
+        <div className="text-3xl font-black text-accent mt-1 tabular-nums">
           {insights.meilleurActif?.score || 0}<span className="text-lg font-medium text-muted">/100</span>
         </div>
       </div>

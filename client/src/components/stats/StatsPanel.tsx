@@ -73,7 +73,10 @@ export function StatsPanel() {
         <h2 className="text-xs font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">
           {t('stats.title')}
         </h2>
-        <button onClick={toggleStats} className="text-zinc-400 hover:text-accent transition-colors">
+        <button
+          onClick={toggleStats}
+          className="w-10 h-10 flex items-center justify-center text-zinc-400 hover:text-accent transition-[color,transform] active:scale-[0.96]"
+        >
           <X size={20} />
         </button>
       </div>
@@ -81,37 +84,37 @@ export function StatsPanel() {
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
         <div className="border-2 border-zinc-100 dark:border-zinc-800 rounded-lg p-3">
           <div className="text-xs text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1">{t('stats.avgScore')}</div>
-          <div className="text-2xl font-black text-zinc-900 dark:text-white">
+          <div className="text-2xl font-black text-zinc-900 dark:text-white tabular-nums">
             {insights.moyenneScoreActifs}
           </div>
         </div>
         <div className="border-2 border-zinc-100 dark:border-zinc-800 rounded-lg p-3">
           <div className="text-xs text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1">{t('stats.avgPriceVol')}</div>
-          <div className="text-2xl font-black text-zinc-900 dark:text-white">
+          <div className="text-2xl font-black text-zinc-900 dark:text-white tabular-nums">
             {insights.moyennePrixTome}€
           </div>
         </div>
         <div className="border-2 border-zinc-100 dark:border-zinc-800 rounded-lg p-3">
           <div className="text-xs text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1">{t('stats.activeVols')}</div>
-          <div className="text-2xl font-black text-accent">
+          <div className="text-2xl font-black text-accent tabular-nums">
             {insights.totalTomesActifs}
           </div>
         </div>
         <div className="border-2 border-zinc-100 dark:border-zinc-800 rounded-lg p-3">
           <div className="text-xs text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1">{t('stats.ownedVols')}</div>
-          <div className="text-2xl font-black text-green-500">
+          <div className="text-2xl font-black text-green-500 tabular-nums">
             {insights.totalTomesAchetes}
           </div>
         </div>
         <div className="border-2 border-zinc-100 dark:border-zinc-800 rounded-lg p-3">
           <div className="text-xs text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1">{t('stats.saved')}</div>
-          <div className="text-2xl font-black text-green-500">
+          <div className="text-2xl font-black text-green-500 tabular-nums">
             {insights.economieRealisee.toFixed(0)}€
           </div>
         </div>
         <div className="border-2 border-zinc-100 dark:border-zinc-800 rounded-lg p-3">
           <div className="text-xs text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1">{t('stats.missed')}</div>
-          <div className="text-2xl font-black text-red-500">
+          <div className="text-2xl font-black text-red-500 tabular-nums">
             {insights.economieRatee.toFixed(0)}€
           </div>
         </div>
@@ -148,13 +151,13 @@ export function StatsPanel() {
                 title={isDisabled ? undefined : t('stats.clickToFilter')}
               >
                 <div
-                  className={`w-full ${bar.color} rounded-sm transition-all duration-500 ${
+                  className={`w-full ${bar.color} rounded-sm transition-[height,box-shadow] duration-500 ${
                     isActive ? 'ring-2 ring-offset-2 ring-accent' : ''
                   }`}
                   style={{ height: `${height}%`, minHeight: bar.count > 0 ? '4px' : '0' }}
                 />
                 <div className="text-center mt-2">
-                  <div className={`text-xl font-black ${isActive ? 'text-accent' : 'text-zinc-900 dark:text-white'}`}>
+                  <div className={`text-xl font-black tabular-nums ${isActive ? 'text-accent' : 'text-zinc-900 dark:text-white'}`}>
                     {bar.count}
                   </div>
                   <div className={`text-xs ${isActive ? 'text-accent' : 'text-zinc-500 dark:text-zinc-400'}`}>

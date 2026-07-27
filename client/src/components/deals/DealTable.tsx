@@ -58,7 +58,7 @@ export function DealTable({ deals, status, economie }: DealTableProps) {
       {/* Header */}
       <div className="px-4 py-3 flex items-center justify-between border-b-2 border-zinc-100 dark:border-zinc-800">
         <div className="flex items-center gap-4">
-          <h2 className={`text-sm font-black tracking-wider ${config.textColor}`}>
+          <h2 className={`text-sm font-black tracking-wider text-balance ${config.textColor}`}>
             {config.title}
           </h2>
           <span className="text-2xl font-black text-zinc-900 dark:text-white">{deals.length}</span>
@@ -71,7 +71,7 @@ export function DealTable({ deals, status, economie }: DealTableProps) {
         {config.showAdd && (
           <button
             onClick={openAddModal}
-            className="px-3 py-1.5 bg-accent hover:bg-accent/90 rounded-lg flex items-center gap-2 text-white font-medium text-sm transition-colors"
+            className="px-3 py-1.5 bg-accent hover:bg-accent/90 rounded-lg flex items-center gap-2 text-white font-medium text-sm transition-[background-color,transform] active:scale-[0.96]"
           >
             <Plus size={16} />
             {t('dealTable.add')}
@@ -157,7 +157,7 @@ export function DealTable({ deals, status, economie }: DealTableProps) {
                 </div>
                 <button
                   onClick={openAddModal}
-                  className="inline-flex items-center gap-2 px-4 py-2 bg-accent hover:bg-accent/90 text-white rounded-lg font-medium text-sm transition-colors"
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-accent hover:bg-accent/90 text-white rounded-lg font-medium text-sm transition-[background-color,transform] active:scale-[0.96]"
                 >
                   <Sparkles size={16} />
                   {t('emptyState.addFirst')}

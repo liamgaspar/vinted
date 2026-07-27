@@ -20,30 +20,30 @@ export function BudgetCard({ budget }: BudgetCardProps) {
         <h2 className="text-xs font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">
           {t('budget.title')}
         </h2>
-        <div className="text-3xl font-black text-zinc-900 dark:text-white">
+        <div className="text-3xl font-black text-zinc-900 dark:text-white tabular-nums">
           {budget.totalReel}€
         </div>
       </div>
       <div className="grid grid-cols-3 md:grid-cols-5 gap-4">
         <div>
           <div className="text-xs text-muted dark:text-muted-dark uppercase tracking-wider">{t('budget.items')}</div>
-          <div className="text-xl font-bold text-zinc-900 dark:text-white">{budget.total}€</div>
+          <div className="text-xl font-bold text-zinc-900 dark:text-white tabular-nums">{budget.total}€</div>
         </div>
         <div>
           <div className="text-xs text-muted dark:text-muted-dark uppercase tracking-wider">{t('budget.shipping')}</div>
-          <div className="text-xl font-bold text-zinc-900 dark:text-white">{budget.fraisPort}€</div>
+          <div className="text-xl font-bold text-zinc-900 dark:text-white tabular-nums">{budget.fraisPort}€</div>
         </div>
         <div>
           <div className="text-xs text-muted dark:text-muted-dark uppercase tracking-wider">{t('budget.volumes')}</div>
-          <div className="text-xl font-bold text-zinc-900 dark:text-white">{budget.totalTomes}</div>
+          <div className="text-xl font-bold text-zinc-900 dark:text-white tabular-nums">{budget.totalTomes}</div>
         </div>
         <div>
           <div className="text-xs text-muted dark:text-muted-dark uppercase tracking-wider">{t('budget.saving')}</div>
-          <div className="text-xl font-bold text-green-500">{budget.economie.toFixed(0)}€</div>
+          <div className="text-xl font-bold text-green-500 tabular-nums">{budget.economie.toFixed(0)}€</div>
         </div>
         <div>
           <div className="text-xs text-muted dark:text-muted-dark uppercase tracking-wider">{t('budget.vsNew')}</div>
-          <div className="text-xl font-medium text-muted line-through">
+          <div className="text-xl font-medium text-muted line-through tabular-nums">
             {budget.valeurNeuf.toFixed(0)}€
           </div>
         </div>

@@ -29,14 +29,14 @@ export function Recommendations({ recommendations }: RecommendationsProps) {
           <h2 className="text-xs font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">
             {t('insights.title')}
           </h2>
-          <span className="text-sm font-bold text-zinc-900 dark:text-white">
+          <span className="text-sm font-bold text-zinc-900 dark:text-white tabular-nums">
             {recommendations.length}
           </span>
         </div>
         {others.length > 2 && (
           <button
             onClick={() => setExpanded(!expanded)}
-            className="text-xs text-accent hover:underline flex items-center gap-1 font-medium"
+            className="text-xs text-accent hover:underline flex items-center gap-1 font-medium transition-transform active:scale-[0.96]"
           >
             {expanded ? (
               <>{t('insights.less')} <ChevronUp size={14} /></>

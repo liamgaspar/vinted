@@ -53,7 +53,7 @@ export function Header() {
     <div className="border-b-2 border-zinc-200 dark:border-zinc-800 pb-6">
       <div className="flex items-center justify-between flex-wrap gap-4">
         <div>
-          <h1 className="text-4xl font-black tracking-tight text-zinc-900 dark:text-white">
+          <h1 className="text-4xl font-black tracking-tight text-zinc-900 dark:text-white text-balance">
             {t('header.title')}<span className="text-accent">{t('header.titleAccent')}</span>
           </h1>
           <p className="text-muted dark:text-muted-dark text-sm mt-1">
@@ -63,7 +63,7 @@ export function Header() {
         <div className="flex gap-2 flex-wrap">
           <button
             onClick={toggleLanguage}
-            className="px-4 py-2 border-2 border-zinc-300 dark:border-zinc-700 hover:border-accent hover:text-accent rounded-lg flex items-center gap-2 transition-colors text-zinc-700 dark:text-zinc-300 font-medium"
+            className="px-4 py-2 border-2 border-zinc-300 dark:border-zinc-700 hover:border-accent hover:text-accent rounded-lg flex items-center gap-2 transition-[color,border-color,transform] active:scale-[0.96] text-zinc-700 dark:text-zinc-300 font-medium"
             title={i18n.language === 'fr' ? 'Switch to English' : 'Passer en français'}
           >
             <Globe size={18} />
@@ -71,21 +71,21 @@ export function Header() {
           </button>
           <button
             onClick={importFromJSON}
-            className="px-4 py-2 border-2 border-zinc-300 dark:border-zinc-700 hover:border-accent hover:text-accent rounded-lg flex items-center gap-2 transition-colors text-zinc-700 dark:text-zinc-300 font-medium"
+            className="px-4 py-2 border-2 border-zinc-300 dark:border-zinc-700 hover:border-accent hover:text-accent rounded-lg flex items-center gap-2 transition-[color,border-color,transform] active:scale-[0.96] text-zinc-700 dark:text-zinc-300 font-medium"
           >
             <Upload size={18} />
             {t('header.open')}
           </button>
           <button
             onClick={exportToJSON}
-            className="px-4 py-2 border-2 border-zinc-300 dark:border-zinc-700 hover:border-accent hover:text-accent rounded-lg flex items-center gap-2 transition-colors text-zinc-700 dark:text-zinc-300 font-medium"
+            className="px-4 py-2 border-2 border-zinc-300 dark:border-zinc-700 hover:border-accent hover:text-accent rounded-lg flex items-center gap-2 transition-[color,border-color,transform] active:scale-[0.96] text-zinc-700 dark:text-zinc-300 font-medium"
           >
             <Download size={18} />
             {t('header.save')}
           </button>
           <button
             onClick={openResetConfirm}
-            className="px-4 py-2 border-2 border-zinc-300 dark:border-zinc-700 hover:border-red-500 hover:text-red-500 rounded-lg flex items-center gap-2 transition-colors text-zinc-700 dark:text-zinc-300 font-medium"
+            className="px-4 py-2 border-2 border-zinc-300 dark:border-zinc-700 hover:border-red-500 hover:text-red-500 rounded-lg flex items-center gap-2 transition-[color,border-color,transform] active:scale-[0.96] text-zinc-700 dark:text-zinc-300 font-medium"
           >
             <RefreshCw size={18} />
             {t('header.reset')}

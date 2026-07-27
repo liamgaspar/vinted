@@ -84,14 +84,14 @@ export function Toast() {
       {data?.action && (
         <button
           onClick={handleAction}
-          className="px-2 py-1 bg-accent hover:bg-accent/80 text-white rounded font-bold text-xs uppercase tracking-wider transition-colors"
+          className="px-2 py-1 bg-accent hover:bg-accent/80 text-white rounded font-bold text-xs uppercase tracking-wider transition-[background-color,transform] active:scale-[0.96]"
         >
           {data.action.label}
         </button>
       )}
       <button
         onClick={hide}
-        className="p-1 hover:bg-white/10 dark:hover:bg-black/10 rounded transition-colors"
+        className="p-2.5 hover:bg-white/10 dark:hover:bg-black/10 rounded transition-[background-color,transform] active:scale-[0.96]"
       >
         <X size={14} />
       </button>

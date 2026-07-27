@@ -21,7 +21,7 @@ export function KeyboardShortcutsHelp() {
     <div className="border-2 border-zinc-200 dark:border-zinc-800 rounded-lg overflow-hidden">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full px-4 py-3 flex items-center justify-between text-left hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-colors"
+        className="w-full px-4 py-3 flex items-center justify-between text-left hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-[background-color,transform] active:scale-[0.96]"
       >
         <div className="flex items-center gap-2 text-zinc-600 dark:text-zinc-400">
           <Keyboard size={16} />
