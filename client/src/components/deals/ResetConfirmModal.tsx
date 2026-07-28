@@ -6,8 +6,8 @@ import { useDealsStore } from '@/store/dealsStore';
 
 export function ResetConfirmModal() {
   const { t } = useTranslation();
-  const { showResetConfirm, closeResetConfirm } = useUiStore();
-  const { deals, resetDeals } = useDealsStore();
+  const { showResetConfirm, closeResetConfirm, confirmReset } = useUiStore();
+  const { deals } = useDealsStore();
   const [visible, setVisible] = useState(false);
   const [exiting, setExiting] = useState(false);
 
@@ -26,11 +26,6 @@ export function ResetConfirmModal() {
   }, [showResetConfirm, visible]);
 
   if (!visible) return null;
-
-  const handleReset = () => {
-    resetDeals();
-    closeResetConfirm();
-  };
 
   return (
     <div
@@ -67,7 +62,7 @@ export function ResetConfirmModal() {
             {t('resetModal.cancel')}
           </button>
           <button
-            onClick={handleReset}
+            onClick={confirmReset}
             className="flex-1 px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg font-bold transition-[background-color,transform] active:scale-[0.96]"
           >
             {t('resetModal.deleteAll')}

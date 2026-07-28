@@ -93,6 +93,7 @@ export interface Recommendation {
   type: 'urgent' | 'warning' | 'info' | 'success';
   icon: string;
   message: string;
+  dealId?: number;
 }
 
 export interface Insights {

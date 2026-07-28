@@ -28,12 +28,16 @@ interface UiState {
   // Compare
   compareDeals: number[]; // IDs des deals à comparer
 
+  // Highlight (transient, for scroll-to-row from recommendations)
+  highlightDealId: number | null;
+
   // Actions - Modals
   openAddModal: () => void;
   openEditModal: (deal: Deal) => void;
   closeModal: () => void;
   openResetConfirm: () => void;
   closeResetConfirm: () => void;
+  confirmReset: () => void;
   openDeleteConfirm: (dealId: number, dealName: string) => void;
   closeDeleteConfirm: () => void;
   confirmDelete: () => void;
@@ -52,6 +56,9 @@ interface UiState {
   toggleCompareSelection: (dealId: number) => void;
   clearCompareSelection: () => void;
   isSelectedForCompare: (dealId: number) => boolean;
+
+  // Actions - Highlight
+  highlightDeal: (id: number) => void;
 }
 
 const defaultFilters: Filters = {
@@ -73,6 +80,7 @@ export const useUiStore = create<UiState>((set, get) => ({
   showComparePanel: false,
   filters: defaultFilters,
   compareDeals: [],
+  highlightDealId: null,
 
   // Modal actions
   openAddModal: () => set({ showDealModal: true, editingDeal: null }),
@@ -80,6 +88,19 @@ export const useUiStore = create<UiState>((set, get) => ({
   closeModal: () => set({ showDealModal: false, editingDeal: null }),
   openResetConfirm: () => set({ showResetConfirm: true }),
   closeResetConfirm: () => set({ showResetConfirm: false }),
+  confirmReset: () => {
+    import('@/store/dealsStore').then(({ useDealsStore }) => {
+      useDealsStore.getState().resetDeals();
+      useToast.getState().show('All deals cleared', {
+        action: {
+          label: 'Undo',
+          onClick: () => useDealsStore.getState().undo(),
+        },
+        duration: 5000,
+      });
+    });
+    set({ showResetConfirm: false });
+  },
   openDeleteConfirm: (dealId, dealName) =>
     set({ showDeleteConfirm: true, deleteConfirmData: { dealId, dealName } }),
   closeDeleteConfirm: () => set({ showDeleteConfirm: false, deleteConfirmData: null }),
@@ -125,4 +146,14 @@ export const useUiStore = create<UiState>((set, get) => ({
   },
   clearCompareSelection: () => set({ compareDeals: [] }),
   isSelectedForCompare: (dealId) => get().compareDeals.includes(dealId),
+
+  // Highlight actions
+  highlightDeal: (id) => {
+    set({ highlightDealId: id });
+    setTimeout(() => {
+      if (get().highlightDealId === id) {
+        set({ highlightDealId: null });
+      }
+    }, 2000);
+  },
 }));
