@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import type { Deal, Filters } from '@shared/types';
+import type { Deal, DealStatus, Filters } from '@shared/types';
 import { useToast } from '@/components/ui/Toast';
 
 const MAX_COMPARE_DEALS = 3;
@@ -31,6 +31,9 @@ interface UiState {
   // Highlight (transient, for scroll-to-row from recommendations)
   highlightDealId: number | null;
 
+  // Collapsed state of each deal table, keyed by status
+  collapsedTables: Record<DealStatus, boolean>;
+
   // Actions - Modals
   openAddModal: () => void;
   openEditModal: (deal: Deal) => void;
@@ -58,7 +61,11 @@ interface UiState {
   isSelectedForCompare: (dealId: number) => boolean;
 
   // Actions - Highlight
-  highlightDeal: (id: number) => void;
+  highlightDeal: (id: number, status?: DealStatus) => void;
+
+  // Actions - Table collapse
+  toggleTableCollapsed: (status: DealStatus) => void;
+  expandTable: (status: DealStatus) => void;
 }
 
 const defaultFilters: Filters = {
@@ -81,6 +88,7 @@ export const useUiStore = create<UiState>((set, get) => ({
   filters: defaultFilters,
   compareDeals: [],
   highlightDealId: null,
+  collapsedTables: { Actif: false, 'Acheté': false, 'Raté': true },
 
   // Modal actions
   openAddModal: () => set({ showDealModal: true, editingDeal: null }),
@@ -148,7 +156,10 @@ export const useUiStore = create<UiState>((set, get) => ({
   isSelectedForCompare: (dealId) => get().compareDeals.includes(dealId),
 
   // Highlight actions
-  highlightDeal: (id) => {
+  highlightDeal: (id, status) => {
+    if (status) {
+      get().expandTable(status);
+    }
     set({ highlightDealId: id });
     setTimeout(() => {
       if (get().highlightDealId === id) {
@@ -156,4 +167,12 @@ export const useUiStore = create<UiState>((set, get) => ({
       }
     }, 2000);
   },
+
+  // Table collapse actions
+  toggleTableCollapsed: (status) =>
+    set((s) => ({
+      collapsedTables: { ...s.collapsedTables, [status]: !s.collapsedTables[status] },
+    })),
+  expandTable: (status) =>
+    set((s) => ({ collapsedTables: { ...s.collapsedTables, [status]: false } })),
 }));

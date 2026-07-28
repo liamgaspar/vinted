@@ -1,7 +1,7 @@
-import { ChevronDown, ChevronUp } from 'lucide-react';
+import { ChevronDown, ChevronRight, ChevronUp } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import type { Recommendation } from '@shared/types';
+import type { DealStatus, Recommendation } from '@shared/types';
 import { useUiStore } from '@/store/uiStore';
 
 interface RecommendationsProps {
@@ -23,9 +23,11 @@ export function Recommendations({ recommendations }: RecommendationsProps) {
   const visible = [...urgent, ...warnings, ...(expanded ? others : others.slice(0, 2))];
   const hiddenCount = expanded ? 0 : Math.max(0, others.length - 2);
 
-  const handleDealClick = (dealId: number) => {
-    useUiStore.getState().highlightDeal(dealId);
-    document.getElementById(`deal-row-${dealId}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  const handleDealClick = (dealId: number, dealStatus?: DealStatus) => {
+    useUiStore.getState().highlightDeal(dealId, dealStatus);
+    requestAnimationFrame(() => {
+      document.getElementById(`deal-row-${dealId}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    });
   };
 
   return (
@@ -74,10 +76,14 @@ export function Recommendations({ recommendations }: RecommendationsProps) {
               <button
                 key={index}
                 type="button"
-                onClick={() => handleDealClick(reco.dealId!)}
-                className={`px-3 py-2 rounded-lg border-l-2 w-full cursor-pointer hover:brightness-95 dark:hover:brightness-125 active:scale-[0.96] transition-[background-color,transform] ${colorClass}`}
+                onClick={() => handleDealClick(reco.dealId!, reco.dealStatus)}
+                className={`group relative px-3 py-2 pr-7 rounded-lg border-l-2 w-full cursor-pointer hover:brightness-95 dark:hover:brightness-125 active:scale-[0.96] transition-[background-color,transform] ${colorClass}`}
               >
                 {content}
+                <ChevronRight
+                  size={14}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 text-zinc-400 opacity-50 group-hover:opacity-100 transition-opacity"
+                />
               </button>
             );
           }

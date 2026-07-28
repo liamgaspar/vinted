@@ -94,6 +94,7 @@ export interface Recommendation {
   icon: string;
   message: string;
   dealId?: number;
+  dealStatus?: DealStatus;
 }
 
 export interface Insights {
