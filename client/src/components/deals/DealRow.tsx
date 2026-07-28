@@ -1,9 +1,10 @@
 import { memo, useCallback, useState, useRef, useEffect } from 'react';
-import { Trash2, Pencil, ExternalLink } from 'lucide-react';
+import { Trash2, Pencil, ExternalLink, TrendingDown, TrendingUp } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useDealsStore } from '@/store/dealsStore';
 import { useUiStore } from '@/store/uiStore';
-import type { DealWithScore, DealStatus } from '@shared/types';
+import { formatPrice } from '@/lib/formatPrice';
+import type { DealWithScore, DealStatus, PriceComparison } from '@shared/types';
 import { getScoreColorClass } from '@shared/scoring';
 
 type EditableField = 'serie' | 'tomes' | 'prix' | null;
@@ -13,6 +14,7 @@ interface DealRowProps {
   isSelected: boolean;
   canSelectMore: boolean;
   index: number;
+  priceComparison?: PriceComparison;
 }
 
 // Editable cell style - shows it's clickable/editable
@@ -33,7 +35,8 @@ export const DealRow = memo(function DealRow({
   deal,
   isSelected,
   canSelectMore,
-  index
+  index,
+  priceComparison,
 }: DealRowProps) {
   const { t } = useTranslation();
   const isEven = index % 2 === 0;
@@ -128,7 +131,7 @@ export const DealRow = memo(function DealRow({
   const detailsTooltip = [
     conditionLabel && `${t('dealModal.condition')}: ${conditionLabel}`,
     rarityLabel && `${t('dealModal.rarity')}: ${rarityLabel}`,
-    deal.commenceTome1 === false && 'Missing Vol.1',
+    deal.commenceTome1 === false && t('dealRow.missingVol1'),
   ].filter(Boolean).join(' · ') || undefined;
 
   return (
@@ -183,7 +186,7 @@ export const DealRow = memo(function DealRow({
       {/* Volumes - double-click to edit, tooltip shows total price */}
       <td
         className={`px-3 py-3 text-right tabular-nums text-zinc-700 dark:text-zinc-300 ${editableCellClass}`}
-        title={`${t('dealRow.total')}: ${deal.prix}€`}
+        title={`${t('dealRow.total')}: ${formatPrice(deal.prix)}`}
         onDoubleClick={() => startEdit('tomes', deal.tomes)}
       >
         {editing === 'tomes' ? (
@@ -205,7 +208,7 @@ export const DealRow = memo(function DealRow({
       {/* €/vol - double-click to edit price */}
       <td
         className={`px-3 py-3 text-right tabular-nums text-zinc-600 dark:text-zinc-400 ${editableCellClass}`}
-        title={`${t('dealRow.newPrice')}: ${deal.prixNeuf}€/vol`}
+        title={`${t('dealRow.newPrice')}: ${formatPrice(deal.prixNeuf)}/vol`}
         onDoubleClick={() => startEdit('prix', deal.prix)}
       >
         {editing === 'prix' ? (
@@ -221,7 +224,21 @@ export const DealRow = memo(function DealRow({
             className="w-20 px-2 py-1 border-2 border-accent rounded bg-white dark:bg-zinc-800 text-zinc-900 dark:text-white text-right focus:outline-none"
           />
         ) : (
-          <><span className={editableValueClass}>{deal.prixParTome.toFixed(2)}€</span><EditHint /></>
+          <>
+            <span className={editableValueClass}>{formatPrice(deal.prixParTome)}</span>
+            {priceComparison?.hasPreviousDeals && Math.abs(priceComparison.diffPercent) >= 5 && (
+              <span
+                title={t(
+                  priceComparison.diffPercent < 0 ? 'dealRow.cheaperThanUsual' : 'dealRow.pricierThanUsual',
+                  { percent: Math.abs(Math.round(priceComparison.diffPercent)) }
+                )}
+                className={`inline-flex ml-1 align-middle ${priceComparison.diffPercent < 0 ? 'text-green-500' : 'text-red-500'}`}
+              >
+                {priceComparison.diffPercent < 0 ? <TrendingDown size={12} /> : <TrendingUp size={12} />}
+              </span>
+            )}
+            <EditHint />
+          </>
         )}
       </td>
 
@@ -231,7 +248,7 @@ export const DealRow = memo(function DealRow({
         title={`${deal.etat === 'Raté' ? '-' : ''}${deal.pourcentage}%`}
       >
         <span className={`text-lg font-bold ${deal.etat === 'Raté' ? 'text-red-500' : 'text-green-500'}`}>
-          {deal.etat === 'Raté' ? '-' : ''}{deal.economie.toFixed(0)}€
+          {deal.etat === 'Raté' ? '-' : ''}{formatPrice(deal.economie)}
         </span>
       </td>
 

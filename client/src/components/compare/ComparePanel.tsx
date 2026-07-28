@@ -3,6 +3,7 @@ import { X, Trophy, ArrowRight } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useUiStore } from '@/store/uiStore';
 import { useDeals } from '@/hooks/useDeals';
+import { formatPrice } from '@/lib/formatPrice';
 import type { DealWithScore } from '@shared/types';
 import { getScoreColorClass } from '@shared/scoring';
 
@@ -18,7 +19,7 @@ const metrics: CompareMetric[] = [
   {
     labelKey: 'compare.price',
     getValue: (d) => d.prix,
-    format: (v) => `${v}€`,
+    format: (v) => formatPrice(Number(v)),
     higherIsBetter: false,
     type: 'number',
   },
@@ -32,7 +33,7 @@ const metrics: CompareMetric[] = [
   {
     labelKey: 'compare.pricePerVol',
     getValue: (d) => d.prixParTome,
-    format: (v) => `${Number(v).toFixed(2)}€`,
+    format: (v) => formatPrice(Number(v)),
     higherIsBetter: false,
     type: 'number',
   },
@@ -60,6 +61,13 @@ function getBestIndex(values: (number | string)[], higherIsBetter: boolean): num
     return numValues.indexOf(min);
   }
 }
+
+const conditionKeys: Record<string, string> = {
+  Neuf: 'condition.new',
+  TBE: 'condition.likeNew',
+  BE: 'condition.good',
+  Acceptable: 'condition.fair',
+};
 
 export function ComparePanel() {
   const { t } = useTranslation();
@@ -166,7 +174,7 @@ export function ComparePanel() {
                 <div className={`text-3xl font-black mt-2 tabular-nums ${getScoreColorClass(deal.score)}`}>
                   {deal.score}
                 </div>
-                <div className="text-xs text-muted">{deal.qualitePrix}</div>
+                <div className="text-xs text-muted">{t(`scoring.quality.${deal.qualitePrix}`)}</div>
               </div>
             ))}
           </div>
@@ -188,9 +196,11 @@ export function ComparePanel() {
                   <div className="text-xs font-bold text-zinc-500 uppercase tracking-wider">{t(metric.labelKey)}</div>
                   {values.map((value, idx) => {
                     const isBest = idx === bestIdx && metric.type === 'number';
-                    const displayValue = metric.format
-                      ? metric.format(value)
-                      : String(value);
+                    const displayValue = metric.labelKey === 'compare.condition'
+                      ? (conditionKeys[value as string] ? t(conditionKeys[value as string]) : '—')
+                      : metric.format
+                        ? metric.format(value)
+                        : String(value);
 
                     return (
                       <div
@@ -221,7 +231,11 @@ export function ComparePanel() {
                   {t('compare.best')}: {bestDeal.serie}
                 </div>
                 <div className="text-sm text-muted dark:text-muted-dark tabular-nums">
-                  Score {bestDeal.score}/100 · {bestDeal.pourcentage}% saved · {bestDeal.prixParTome.toFixed(2)}€/vol
+                  {t('compare.bestSummary', {
+                    score: bestDeal.score,
+                    percent: bestDeal.pourcentage,
+                    pricePerVol: formatPrice(bestDeal.prixParTome),
+                  })}
                 </div>
               </div>
             </div>

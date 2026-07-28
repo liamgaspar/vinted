@@ -6,7 +6,10 @@
     "open": "Ouvrir",
     "save": "Sauver",
     "reset": "Reset",
-    "invalidJson": "Fichier JSON invalide"
+    "invalidJson": "Fichier JSON invalide",
+    "exportCsv": "Exporter en CSV (compatible tableur)",
+    "switchToEnglish": "Switch to English",
+    "switchToFrench": "Passer en français"
   },
   "dealModal": {
     "newDeal": "Nouveau Deal",
@@ -29,6 +32,9 @@
     "cancel": "Annuler",
     "save": "Sauver",
     "addDeal": "Ajouter",
+    "analysis": "Analyse",
+    "conditionPointsHint": "{{points}} pts au score pour cet état",
+    "volumeBonus": "Taille du lot",
     "preview": {
       "complete": "Complet",
       "partial": "Partiel",
@@ -77,7 +83,8 @@
     "ascending": "Croissant",
     "descending": "Décroissant",
     "expand": "Déplier",
-    "collapse": "Replier"
+    "collapse": "Replier",
+    "avg": "moy."
   },
   "emptyState": {
     "activeHint": "Trouve des deals sur Vinted et suis-les ici pour comparer les prix",
@@ -94,7 +101,10 @@
     "newPrice": "Neuf",
     "editAllFields": "Modifier tous les champs",
     "delete": "Supprimer",
-    "openVinted": "Ouvrir sur Vinted"
+    "openVinted": "Ouvrir sur Vinted",
+    "missingVol1": "Tome 1 manquant",
+    "cheaperThanUsual": "{{percent}}% moins cher que ton prix habituel pour cette série",
+    "pricierThanUsual": "{{percent}}% plus cher que ton prix habituel pour cette série"
   },
   "scoring": {
     "quality": {
@@ -152,6 +162,7 @@
     "percentOff": "% réduction",
     "condition": "État",
     "best": "Meilleur",
+    "bestSummary": "Score {{score}}/100 · {{percent}}% économisés · {{pricePerVol}}/tome",
     "clearSelection": "Effacer sélection",
     "done": "Terminé",
     "cancel": "Annuler",
@@ -167,7 +178,26 @@
     "bought": "Achetés",
     "missed": "Ratés",
     "all": "Tous",
-    "close": "Fermer"
+    "close": "Fermer",
+    "filterToast": {
+      "active": "Filtre : deals actifs",
+      "bought": "Filtre : deals achetés",
+      "missed": "Filtre : deals ratés",
+      "all": "Filtre : tous les deals"
+    }
+  },
+  "dealFilters": {
+    "status": "Statut",
+    "all": "Tous",
+    "minPercent": "% min",
+    "maxPricePerVol": "€/tome max",
+    "minScore": "Score min",
+    "rarity": "Rareté",
+    "condition": "État",
+    "search": "Rechercher",
+    "searchPlaceholder": "Nom de série...",
+    "reset": "Reset",
+    "of": "sur {{total}}"
   },
   "resetModal": {
     "title": "Tout réinitialiser ?",
@@ -206,16 +236,17 @@
     "proTip": "Astuce pro : Les meilleurs deals ont ≤35% du prix neuf, 10+ tomes, état Neuf/TBE.",
     "tips": {
       "offerDiscount": "propose {{price}}€ (-15%)",
-      "lookBiggerLot": "cherche un plus gros lot (+{{vols}} tomes = +{{pts}} pts)",
-      "askCondition": "demande l'état (+3 pts si Neuf)",
-      "acceptableDiscount": "\"Acceptable\" = -12 pts, demande une réduction",
-      "goodDiscount": "\"BE\" = -5 pts, négocie pour compenser"
+      "lookBiggerLot": "cherche un plus gros lot (+{{vols}} tomes pour atteindre le bonus à 10 tomes)",
+      "askCondition": "demande l'état (+8 pts si Neuf)",
+      "acceptableDiscount": "\"Acceptable\" = -7 pts, demande une réduction",
+      "goodDiscount": "\"BE\" = -2 pts, négocie pour compenser"
     }
   },
   "toast": {
     "deleted": "\"{{name}}\" supprimé",
     "undo": "Annuler",
-    "restored": "Deal restauré"
+    "restored": "Deal restauré",
+    "allCleared": "Tous les deals supprimés"
   },
   "stats": {
     "title": "Statistiques",
@@ -247,6 +278,10 @@
     "coverage": "Couverture",
     "rarity": "Rareté",
     "listingAge": "Ancienneté",
-    "upTo": "jusqu'à"
+    "volume": "Taille du lot",
+    "to": "à",
+    "upTo": "jusqu'à",
+    "priceExample": "{{percent}}% de réduction → {{points}}pts",
+    "scoreTooltip": "Score sur 100 : prix (70pts), état (15pts), couverture de la série (10pts), rareté (5pts), ancienneté (5pts), taille du lot (±2pts)"
   }
 }

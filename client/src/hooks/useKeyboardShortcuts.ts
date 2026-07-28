@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import i18n from '@/i18n';
 import { useUiStore } from '@/store/uiStore';
 import { useDealsStore } from '@/store/dealsStore';
 import { useToast } from '@/components/ui/Toast';
@@ -84,22 +85,22 @@ export function useKeyboardShortcuts() {
         case '1':
           e.preventDefault();
           setFilters({ etat: 'Actif' });
-          toast.show('Filter: Active deals');
+          toast.show(i18n.t('shortcuts.filterToast.active'));
           break;
         case '2':
           e.preventDefault();
           setFilters({ etat: 'Acheté' });
-          toast.show('Filter: Bought deals');
+          toast.show(i18n.t('shortcuts.filterToast.bought'));
           break;
         case '3':
           e.preventDefault();
           setFilters({ etat: 'Raté' });
-          toast.show('Filter: Missed deals');
+          toast.show(i18n.t('shortcuts.filterToast.missed'));
           break;
         case '0':
           e.preventDefault();
           setFilters({ etat: 'all' });
-          toast.show('Filter: All deals');
+          toast.show(i18n.t('shortcuts.filterToast.all'));
           break;
       }
     };

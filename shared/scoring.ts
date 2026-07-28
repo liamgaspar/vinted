@@ -39,38 +39,52 @@ import type { DealInput, ScoreResult, ScoreType } from './types';
 
 // === HELPER FUNCTIONS ===
 
+// Ces fonctions retournent des CLÉS i18n (scoring.quality/economy/recommendation.*),
+// pas du texte affichable — la traduction se fait au moment du rendu (composants React).
+
 function getQualitePrix(score: number): string {
-  if (score >= 80) return 'Exceptionnel';
-  if (score >= 70) return 'Très bon';
-  if (score >= 60) return 'Bon deal';
-  if (score >= 50) return 'Correct';
-  if (score >= 40) return 'Moyen';
-  return 'Mauvais';
+  if (score >= 80) return 'exceptional';
+  if (score >= 70) return 'veryGood';
+  if (score >= 60) return 'goodDeal';
+  if (score >= 50) return 'decent';
+  if (score >= 40) return 'average';
+  return 'bad';
 }
 
 function getCategorieEconomie(economie: number): string {
-  if (economie >= 80) return 'Économie massive';
-  if (economie >= 50) return 'Grosse économie';
-  if (economie >= 30) return 'Belle économie';
-  if (economie >= 15) return 'Économie correcte';
-  if (economie >= 5) return 'Petite économie';
-  return 'Économie négligeable';
+  if (economie >= 80) return 'massive';
+  if (economie >= 50) return 'big';
+  if (economie >= 30) return 'nice';
+  if (economie >= 15) return 'decent';
+  if (economie >= 5) return 'small';
+  return 'negligible';
 }
 
 function getRecommandation(score: number): string {
-  if (score >= 80) return 'FONCE !';
-  if (score >= 70) return 'Très bonne affaire';
-  if (score >= 60) return 'Bonne affaire';
-  if (score >= 50) return 'Deal correct';
-  if (score >= 40) return 'Essaie de négocier';
-  return 'Passe ton chemin';
+  if (score >= 80) return 'goForIt';
+  if (score >= 70) return 'greatDeal';
+  if (score >= 60) return 'goodDeal';
+  if (score >= 50) return 'decentDeal';
+  if (score >= 40) return 'tryNegotiating';
+  return 'skip';
 }
 
-function getSuggestionNego(score: number, prix: number, prixCibleScore60: number): string | null {
+function getSuggestionNego(score: number, prix: number, prixCibleScore60: number): { price: number } | null {
   if (score < 50 && prixCibleScore60 < prix) {
-    return `Négocie à ${Math.round(prixCibleScore60)}€`;
+    return { price: Math.round(prixCibleScore60) };
   }
   return null;
+}
+
+// Le volume n'affecte pas la QUALITÉ du deal (le prix reste juste le prix),
+// mais un très gros lot réduit le port par volume et un lot minuscule
+// (1-2 tomes) est peu pratique — petit bonus/malus, borné pour ne pas
+// écraser le critère prix (70 pts).
+function getVolumeBonus(tomes: number): number {
+  if (tomes >= 15) return 2;
+  if (tomes >= 10) return 1;
+  if (tomes <= 2) return -2;
+  return 0;
 }
 
 function getUrgence(score: number, rarete?: string): 'haute' | 'moyenne' | 'basse' {
@@ -206,7 +220,8 @@ export function calculateScore(deal: DealInput): ScoreResult {
   // SCORE FINAL
   // ═══════════════════════════════════════════════════════════════
 
-  const rawScore = prixScore + etatScore + coverageScore + rareteScore + ancienneteScore;
+  const volumeBonus = getVolumeBonus(deal.tomes);
+  const rawScore = prixScore + etatScore + coverageScore + rareteScore + ancienneteScore + volumeBonus;
   const score = Math.max(0, Math.min(100, Math.round(rawScore)));
 
   // ═══════════════════════════════════════════════════════════════
@@ -235,7 +250,7 @@ export function calculateScore(deal: DealInput): ScoreResult {
   // economie = (pourcentageEconomie / 100) * totalNeuf
   // prixCible = totalNeuf - economie
 
-  const autresPoints = etatScore + coverageScore + rareteScore + ancienneteScore;
+  const autresPoints = etatScore + coverageScore + rareteScore + ancienneteScore + volumeBonus;
   const prixScoreNeeded = Math.max(0, 60 - autresPoints);
   const pourcentageNeeded = (prixScoreNeeded / 70) * 100;
   const economieNeeded = (pourcentageNeeded / 100) * totalNeuf;
@@ -268,12 +283,12 @@ export function calculateScore(deal: DealInput): ScoreResult {
     categorieEconomie: getCategorieEconomie(economie),
     recommandation: getRecommandation(score),
     suggestionNego: getSuggestionNego(score, deal.prix, prixCibleScore60),
-    v2Bonus: etatBonus + coverageBonus + rareteBonus + ancienneteBonus,
+    v2Bonus: etatBonus + coverageBonus + rareteBonus + ancienneteBonus + volumeBonus,
     urgence: getUrgence(score, deal.rarete),
     breakdown: {
       base: Math.round(prixScore),
       ratioBonus: 0,
-      volumeBonus: 0, // Plus utilisé
+      volumeBonus,
       etatPhysiqueBonus: etatBonus,
       rareteBonus: rareteBonus,
       completudeBonus: 0,

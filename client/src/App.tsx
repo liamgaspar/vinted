@@ -94,8 +94,8 @@ export default function App() {
             <div>
               <div className="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-2">{t('legend.pricePoints')}</div>
               <div className="text-xs text-zinc-500 dark:text-zinc-400">{t('legend.priceDesc')}</div>
-              <div className="text-xs text-zinc-500 dark:text-zinc-400 mt-1">50% off → 35pts</div>
-              <div className="text-xs text-zinc-500 dark:text-zinc-400">70% off → 49pts</div>
+              <div className="text-xs text-zinc-500 dark:text-zinc-400 mt-1">{t('legend.priceExample', { percent: 50, points: 35 })}</div>
+              <div className="text-xs text-zinc-500 dark:text-zinc-400">{t('legend.priceExample', { percent: 70, points: 49 })}</div>
             </div>
             <div>
               <div className="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-2">{t('legend.conditionPoints')}</div>
@@ -109,6 +109,7 @@ export default function App() {
               <div className="text-xs">{t('legend.coverage')} → {t('legend.upTo')} 10pts</div>
               <div className="text-xs">{t('legend.rarity')} → {t('legend.upTo')} 5pts</div>
               <div className="text-xs">{t('legend.listingAge')} → {t('legend.upTo')} 5pts</div>
+              <div className="text-xs">{t('legend.volume')} → -2 {t('legend.to')} +2</div>
             </div>
           </div>
         </details>

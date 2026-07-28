@@ -1,4 +1,4 @@
-import { Upload, Download, RefreshCw, Globe } from 'lucide-react';
+import { Upload, Download, FileSpreadsheet, RefreshCw, Globe } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useUiStore } from '@/store/uiStore';
 import { useDeals } from '@/hooks/useDeals';
@@ -23,6 +23,27 @@ export function Header() {
     const a = document.createElement('a');
     a.href = url;
     a.download = `vinted-manga-tracker-${new Date().toISOString().split('T')[0]}.json`;
+    a.click();
+  };
+
+  const exportToCSV = () => {
+    const columns = [
+      'serie', 'tomes', 'tomesTotal', 'prix', 'prixNeuf', 'etat',
+      'etatPhysique', 'rarete', 'anciennete', 'url', 'dateAjout', 'score',
+    ] as const;
+    const escapeCsv = (value: unknown) => {
+      const str = value === undefined || value === null ? '' : String(value);
+      return /[",\n]/.test(str) ? `"${str.replace(/"/g, '""')}"` : str;
+    };
+    const rows = [
+      columns.join(','),
+      ...deals.map((d) => columns.map((col) => escapeCsv(d[col])).join(',')),
+    ];
+    const blob = new Blob([rows.join('\n')], { type: 'text/csv;charset=utf-8' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `vinted-manga-tracker-${new Date().toISOString().split('T')[0]}.csv`;
     a.click();
   };
 
@@ -64,7 +85,7 @@ export function Header() {
           <button
             onClick={toggleLanguage}
             className="px-4 py-2 border-2 border-zinc-300 dark:border-zinc-700 hover:border-accent hover:text-accent rounded-lg flex items-center gap-2 transition-[color,border-color,transform] active:scale-[0.96] text-zinc-700 dark:text-zinc-300 font-medium"
-            title={i18n.language === 'fr' ? 'Switch to English' : 'Passer en français'}
+            title={i18n.language === 'fr' ? t('header.switchToEnglish') : t('header.switchToFrench')}
           >
             <Globe size={18} />
             {i18n.language === 'fr' ? 'FR' : 'EN'}
@@ -82,6 +103,14 @@ export function Header() {
           >
             <Download size={18} />
             {t('header.save')}
+          </button>
+          <button
+            onClick={exportToCSV}
+            className="px-4 py-2 border-2 border-zinc-300 dark:border-zinc-700 hover:border-accent hover:text-accent rounded-lg flex items-center gap-2 transition-[color,border-color,transform] active:scale-[0.96] text-zinc-700 dark:text-zinc-300 font-medium"
+            title={t('header.exportCsv')}
+          >
+            <FileSpreadsheet size={18} />
+            CSV
           </button>
           <button
             onClick={openResetConfirm}

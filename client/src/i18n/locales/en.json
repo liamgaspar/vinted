@@ -6,7 +6,10 @@
     "open": "Open",
     "save": "Save",
     "reset": "Reset",
-    "invalidJson": "Invalid JSON file"
+    "invalidJson": "Invalid JSON file",
+    "exportCsv": "Export as CSV (spreadsheet-friendly)",
+    "switchToEnglish": "Switch to English",
+    "switchToFrench": "Passer en français"
   },
   "dealModal": {
     "newDeal": "New Deal",
@@ -29,6 +32,9 @@
     "cancel": "Cancel",
     "save": "Save",
     "addDeal": "Add Deal",
+    "analysis": "Analysis",
+    "conditionPointsHint": "{{points}} pts to the score for this condition",
+    "volumeBonus": "Lot size",
     "preview": {
       "complete": "Complete",
       "partial": "Partial",
@@ -77,7 +83,8 @@
     "ascending": "Ascending",
     "descending": "Descending",
     "expand": "Expand",
-    "collapse": "Collapse"
+    "collapse": "Collapse",
+    "avg": "avg"
   },
   "emptyState": {
     "activeHint": "Find deals on Vinted and track them here to compare prices",
@@ -94,7 +101,10 @@
     "newPrice": "New",
     "editAllFields": "Edit all fields",
     "delete": "Delete",
-    "openVinted": "Open on Vinted"
+    "openVinted": "Open on Vinted",
+    "missingVol1": "Missing Vol.1",
+    "cheaperThanUsual": "{{percent}}% cheaper than your usual price for this series",
+    "pricierThanUsual": "{{percent}}% pricier than your usual price for this series"
   },
   "scoring": {
     "quality": {
@@ -152,6 +162,7 @@
     "percentOff": "% off",
     "condition": "Condition",
     "best": "Best",
+    "bestSummary": "Score {{score}}/100 · {{percent}}% saved · {{pricePerVol}}/vol",
     "clearSelection": "Clear selection",
     "done": "Done",
     "cancel": "Cancel",
@@ -167,7 +178,26 @@
     "bought": "Bought",
     "missed": "Missed",
     "all": "All",
-    "close": "Close"
+    "close": "Close",
+    "filterToast": {
+      "active": "Filter: Active deals",
+      "bought": "Filter: Bought deals",
+      "missed": "Filter: Missed deals",
+      "all": "Filter: All deals"
+    }
+  },
+  "dealFilters": {
+    "status": "Status",
+    "all": "All",
+    "minPercent": "Min %",
+    "maxPricePerVol": "Max €/vol",
+    "minScore": "Min score",
+    "rarity": "Rarity",
+    "condition": "Condition",
+    "search": "Search",
+    "searchPlaceholder": "Series name...",
+    "reset": "Reset",
+    "of": "of {{total}}"
   },
   "resetModal": {
     "title": "Reset Everything?",
@@ -206,16 +236,17 @@
     "proTip": "Pro tip: Best deals have ≤35% ratio, 10+ volumes, Mint/Like New condition.",
     "tips": {
       "offerDiscount": "offer {{price}}€ (-15%)",
-      "lookBiggerLot": "look for bigger lot (+{{vols}} vols = +{{pts}} pts)",
-      "askCondition": "ask about condition (+3 pts if Mint)",
-      "acceptableDiscount": "\"Acceptable\" = -12 pts, demand extra discount",
-      "goodDiscount": "\"Good\" = -5 pts, negotiate to compensate"
+      "lookBiggerLot": "look for a bigger lot (+{{vols}} vols to reach the 10-vol bonus)",
+      "askCondition": "ask about condition (+8 pts if New)",
+      "acceptableDiscount": "\"Acceptable\" = -7 pts, demand extra discount",
+      "goodDiscount": "\"Good\" = -2 pts, negotiate to compensate"
     }
   },
   "toast": {
     "deleted": "\"{{name}}\" deleted",
     "undo": "Undo",
-    "restored": "Deal restored"
+    "restored": "Deal restored",
+    "allCleared": "All deals cleared"
   },
   "stats": {
     "title": "Statistics",
@@ -247,6 +278,10 @@
     "coverage": "Coverage",
     "rarity": "Rarity",
     "listingAge": "Listing age",
-    "upTo": "up to"
+    "volume": "Lot size",
+    "to": "to",
+    "upTo": "up to",
+    "priceExample": "{{percent}}% off → {{points}}pts",
+    "scoreTooltip": "Score out of 100: price (70pts), condition (15pts), series coverage (10pts), rarity (5pts), listing age (5pts), lot size (±2pts)"
   }
 }

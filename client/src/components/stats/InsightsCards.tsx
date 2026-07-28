@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next';
+import { formatPrice } from '@/lib/formatPrice';
 import type { Insights } from '@shared/types';
 
 interface InsightsCardsProps {
@@ -19,7 +20,7 @@ export function InsightsCards({ insights }: InsightsCardsProps) {
           {insights.totalActifs}
         </div>
         <div className="text-sm text-muted dark:text-muted-dark mt-2 tabular-nums">
-          {insights.economieActifs.toFixed(0)}€ {t('insights.potential')}
+          {formatPrice(insights.economieActifs)} {t('insights.potential')}
         </div>
       </div>
 
@@ -32,7 +33,7 @@ export function InsightsCards({ insights }: InsightsCardsProps) {
           {insights.totalAchetes}
         </div>
         <div className="text-sm text-green-600 dark:text-green-400 mt-2 font-medium tabular-nums">
-          {insights.economieRealisee.toFixed(0)}€ {t('insights.saved')}
+          {formatPrice(insights.economieRealisee)} {t('insights.saved')}
         </div>
       </div>
 
@@ -45,7 +46,7 @@ export function InsightsCards({ insights }: InsightsCardsProps) {
           {insights.totalRates}
         </div>
         <div className="text-sm text-red-500 mt-2 font-medium tabular-nums">
-          {insights.economieRatee.toFixed(0)}€ {t('insights.lost')}
+          {formatPrice(insights.economieRatee)} {t('insights.lost')}
         </div>
       </div>
 

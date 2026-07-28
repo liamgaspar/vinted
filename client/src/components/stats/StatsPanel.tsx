@@ -2,6 +2,7 @@ import { X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useUiStore } from '@/store/uiStore';
 import { useDeals } from '@/hooks/useDeals';
+import { formatPrice } from '@/lib/formatPrice';
 
 export function StatsPanel() {
   const { t } = useTranslation();
@@ -91,7 +92,7 @@ export function StatsPanel() {
         <div className="border-2 border-zinc-100 dark:border-zinc-800 rounded-lg p-3">
           <div className="text-xs text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1">{t('stats.avgPriceVol')}</div>
           <div className="text-2xl font-black text-zinc-900 dark:text-white tabular-nums">
-            {insights.moyennePrixTome}€
+            {formatPrice(insights.moyennePrixTome)}
           </div>
         </div>
         <div className="border-2 border-zinc-100 dark:border-zinc-800 rounded-lg p-3">
@@ -109,13 +110,13 @@ export function StatsPanel() {
         <div className="border-2 border-zinc-100 dark:border-zinc-800 rounded-lg p-3">
           <div className="text-xs text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1">{t('stats.saved')}</div>
           <div className="text-2xl font-black text-green-500 tabular-nums">
-            {insights.economieRealisee.toFixed(0)}€
+            {formatPrice(insights.economieRealisee)}
           </div>
         </div>
         <div className="border-2 border-zinc-100 dark:border-zinc-800 rounded-lg p-3">
           <div className="text-xs text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1">{t('stats.missed')}</div>
           <div className="text-2xl font-black text-red-500 tabular-nums">
-            {insights.economieRatee.toFixed(0)}€
+            {formatPrice(insights.economieRatee)}
           </div>
         </div>
       </div>

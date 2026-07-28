@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import i18n from '@/i18n';
 import type { Deal, DealStatus, Filters } from '@shared/types';
 import { useToast } from '@/components/ui/Toast';
 
@@ -73,6 +74,8 @@ const defaultFilters: Filters = {
   minPourcentage: 0,
   maxPrixTome: 100,
   searchQuery: '',
+  rarete: 'all',
+  etatPhysique: 'all',
 };
 
 export const useUiStore = create<UiState>((set, get) => ({
@@ -99,9 +102,9 @@ export const useUiStore = create<UiState>((set, get) => ({
   confirmReset: () => {
     import('@/store/dealsStore').then(({ useDealsStore }) => {
       useDealsStore.getState().resetDeals();
-      useToast.getState().show('All deals cleared', {
+      useToast.getState().show(i18n.t('toast.allCleared'), {
         action: {
-          label: 'Undo',
+          label: i18n.t('toast.undo'),
           onClick: () => useDealsStore.getState().undo(),
         },
         duration: 5000,
@@ -120,9 +123,9 @@ export const useUiStore = create<UiState>((set, get) => ({
       import('@/store/dealsStore').then(({ useDealsStore }) => {
         useDealsStore.getState().deleteDeal(deleteConfirmData.dealId);
         // Show undo toast
-        useToast.getState().show(`"${dealName}" deleted`, {
+        useToast.getState().show(i18n.t('toast.deleted', { name: dealName }), {
           action: {
-            label: 'Undo',
+            label: i18n.t('toast.undo'),
             onClick: () => useDealsStore.getState().undo(),
           },
           duration: 5000,

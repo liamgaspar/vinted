@@ -65,10 +65,10 @@ export interface ScoreResult {
   economie: number;
   pourcentage: number;
   ratioOccasionNeuf: number;
-  qualitePrix: string;
-  categorieEconomie: string;
-  recommandation: string;
-  suggestionNego: string | null;
+  qualitePrix: string; // i18n key under scoring.quality.*
+  categorieEconomie: string; // i18n key under scoring.economy.*
+  recommandation: string; // i18n key under scoring.recommendation.*
+  suggestionNego: { price: number } | null;
   v2Bonus: number;
   urgence: Urgence;
   breakdown: ScoreBreakdown;
@@ -85,6 +85,8 @@ export interface Filters {
   searchQuery: string;
   minScore?: number;
   maxScore?: number;
+  rarete: Rarete | 'all';
+  etatPhysique: EtatPhysique | 'all';
 }
 
 // === INSIGHTS TYPES ===
@@ -92,7 +94,8 @@ export interface Filters {
 export interface Recommendation {
   type: 'urgent' | 'warning' | 'info' | 'success';
   icon: string;
-  message: string;
+  messageKey: string; // i18n key under recommendations.*
+  messageParams?: Record<string, string | number>;
   dealId?: number;
   dealStatus?: DealStatus;
 }

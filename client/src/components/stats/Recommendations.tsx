@@ -67,7 +67,9 @@ export function Recommendations({ recommendations }: RecommendationsProps) {
           const content = (
             <div className="flex items-start gap-2">
               <span className="text-base flex-shrink-0">{reco.icon}</span>
-              <p className="text-xs text-zinc-700 dark:text-zinc-300 leading-relaxed text-left">{reco.message}</p>
+              <p className="text-xs text-zinc-700 dark:text-zinc-300 leading-relaxed text-left">
+                {t(reco.messageKey, reco.messageParams)}
+              </p>
             </div>
           );
 

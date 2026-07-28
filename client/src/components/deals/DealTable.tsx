@@ -2,6 +2,8 @@ import { useMemo, useState } from 'react';
 import { Plus, Search, ShoppingBag, XCircle, Sparkles, ArrowUp, ArrowDown, ChevronDown, ChevronUp } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useUiStore } from '@/store/uiStore';
+import { formatPrice } from '@/lib/formatPrice';
+import { usePriceHistory } from '@/hooks/usePriceHistory';
 import { DealRow } from './DealRow';
 import type { DealWithScore, DealStatus } from '@shared/types';
 
@@ -23,6 +25,7 @@ export function DealTable({ deals, status, economie }: DealTableProps) {
 
   const [sortBy, setSortBy] = useState<SortBy>('score');
   const [sortDir, setSortDir] = useState<SortDir>('desc');
+  const { getPriceComparison } = usePriceHistory();
 
   const sortedDeals = useMemo(() => {
     const copy = [...deals];
@@ -87,7 +90,7 @@ export function DealTable({ deals, status, economie }: DealTableProps) {
           <span className="text-2xl font-black text-zinc-900 dark:text-white">{deals.length}</span>
           {economie > 0 && (
             <span className="text-sm text-muted dark:text-muted-dark">
-              {economie.toFixed(0)}€ {config.economieLabel}
+              {formatPrice(economie)} {config.economieLabel}
             </span>
           )}
         </div>
@@ -173,6 +176,7 @@ export function DealTable({ deals, status, economie }: DealTableProps) {
                   index={index}
                   isSelected={compareDeals.includes(deal.id)}
                   canSelectMore={compareDeals.length < 3}
+                  priceComparison={getPriceComparison(deal)}
                 />
               ))}
               {/* Total row */}
@@ -185,12 +189,12 @@ export function DealTable({ deals, status, economie }: DealTableProps) {
                   <td className="px-3 py-3 text-right tabular-nums text-zinc-900 dark:text-white">
                     {totals.tomes}
                   </td>
-                  <td className="px-3 py-3 text-right tabular-nums text-zinc-900 dark:text-white" title={`${(totals.prix / totals.tomes).toFixed(2)}€/vol avg`}>
-                    {totals.prix.toFixed(0)}€
+                  <td className="px-3 py-3 text-right tabular-nums text-zinc-900 dark:text-white" title={`${t('dealTable.avg')}: ${formatPrice(totals.prix / totals.tomes)}/vol`}>
+                    {formatPrice(totals.prix)}
                   </td>
                   <td className="px-3 py-3 text-right tabular-nums" title={`${overallPercent}%`}>
                     <span className={status === 'Raté' ? 'text-red-500' : 'text-green-500'}>
-                      {status === 'Raté' ? '-' : ''}{totals.economie.toFixed(0)}€
+                      {status === 'Raté' ? '-' : ''}{formatPrice(totals.economie)}
                     </span>
                   </td>
                   <td className="px-3 py-3 text-center tabular-nums text-zinc-600 dark:text-zinc-400">

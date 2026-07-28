@@ -1,10 +1,21 @@
 import { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useDealsStore } from '@/store/dealsStore';
 import { useUiStore } from '@/store/uiStore';
 import { calculateScore } from '@shared/scoring';
 import type { DealWithScore, Insights, Recommendation } from '@shared/types';
 
+// Estimation de port par palier de poids (nombre de tomes), plus réaliste
+// qu'un forfait fixe par article : Vinted facture au colis, pas à l'article.
+function estimerFraisPort(nombreLots: number, totalTomes: number): number {
+  if (nombreLots === 0) return 0;
+  const tomesParLot = totalTomes / nombreLots;
+  const coutParColis = tomesParLot <= 3 ? 5 : tomesParLot <= 10 ? 6.5 : 8.5;
+  return Math.ceil(nombreLots * coutParColis);
+}
+
 export function useDeals() {
+  const { t } = useTranslation();
   const deals = useDealsStore((s) => s.deals);
   const filters = useUiStore((s) => s.filters);
 
@@ -31,6 +42,8 @@ export function useDeals() {
         // Score range filter
         if (filters.minScore !== undefined && deal.score < filters.minScore) return false;
         if (filters.maxScore !== undefined && deal.score > filters.maxScore) return false;
+        if (filters.rarete !== 'all' && deal.rarete !== filters.rarete) return false;
+        if (filters.etatPhysique !== 'all' && deal.etatPhysique !== filters.etatPhysique) return false;
         return true;
       })
       .sort((a, b) => b.score - a.score);
@@ -85,7 +98,8 @@ export function useDeals() {
       recommandations.push({
         type: 'urgent',
         icon: '🔥',
-        message: `${dealsExceptionnels.length} exceptional deal(s) (90+): ${names}. Buy now!`,
+        messageKey: 'recommendations.exceptionalDeals',
+        messageParams: { count: dealsExceptionnels.length, names },
         dealId: dealsExceptionnels[0].id,
         dealStatus: 'Actif',
       });
@@ -98,7 +112,8 @@ export function useDeals() {
       recommandations.push({
         type: 'urgent',
         icon: '⏰',
-        message: `${dealsUrgents.length} urgent deal(s): ${names}. Rare items, won't last!`,
+        messageKey: 'recommendations.urgentDeals',
+        messageParams: { count: dealsUrgents.length, names },
         dealId: dealsUrgents[0].id,
         dealStatus: 'Actif',
       });
@@ -115,7 +130,8 @@ export function useDeals() {
       recommandations.push({
         type: 'warning',
         icon: '⌛',
-        message: `${stalledDeals.length} good deal(s) waiting 7+ days. They might sell soon!`,
+        messageKey: 'recommendations.stalledDeals',
+        messageParams: { count: stalledDeals.length },
       });
     }
 
@@ -129,7 +145,8 @@ export function useDeals() {
       recommandations.push({
         type: 'warning',
         icon: '💸',
-        message: `"${worst.serie}" at ${worst.prixParTome.toFixed(2)}€/vol is expensive. Offer ${targetPrice}€ (-15%).`,
+        messageKey: 'recommendations.expensiveDeal',
+        messageParams: { name: worst.serie, price: worst.prixParTome.toFixed(2), target: targetPrice },
         dealId: worst.id,
         dealStatus: 'Actif',
       });
@@ -141,7 +158,8 @@ export function useDeals() {
       recommandations.push({
         type: 'warning',
         icon: '📦',
-        message: `${badCondition.length} deal(s) in fair condition. Ask for detailed photos before buying.`,
+        messageKey: 'recommendations.badCondition',
+        messageParams: { count: badCondition.length },
       });
     }
 
@@ -152,7 +170,8 @@ export function useDeals() {
       recommandations.push({
         type: 'warning',
         icon: '⚠️',
-        message: `${noVol1.length} lot(s) missing Vol.1: ${names}. Make sure you have the first volumes!`,
+        messageKey: 'recommendations.missingVol1',
+        messageParams: { count: noVol1.length, names },
       });
     }
 
@@ -164,7 +183,8 @@ export function useDeals() {
       recommandations.push({
         type: 'warning',
         icon: '🚫',
-        message: `"${worst.serie}" (${worst.score}/100) is overpriced. Max price: ${idealPrice}€ (currently ${worst.prix}€).`,
+        messageKey: 'recommendations.lowScore',
+        messageParams: { name: worst.serie, score: worst.score, ideal: idealPrice, current: worst.prix },
         dealId: worst.id,
         dealStatus: 'Actif',
       });
@@ -176,12 +196,13 @@ export function useDeals() {
     const oldListings = actifs.filter((d) => d.anciennete === 'ancien');
     if (oldListings.length > 0) {
       const suggestions = oldListings.slice(0, 2).map(d =>
-        `${d.serie}: offer ${Math.round(d.prix * 0.8)}€`
+        `${d.serie}: ${t('recommendations.tips.offerDiscount', { price: Math.round(d.prix * 0.8) })}`
       ).join(' · ');
       recommandations.push({
         type: 'success',
         icon: '🤝',
-        message: `${oldListings.length} old listing(s) = motivated seller! ${suggestions}`,
+        messageKey: 'recommendations.oldListings',
+        messageParams: { count: oldListings.length, suggestions },
       });
     }
 
@@ -191,7 +212,8 @@ export function useDeals() {
       recommandations.push({
         type: 'info',
         icon: '💬',
-        message: `${weekOldListings.length} listing(s) online for weeks. Try offering -10%.`,
+        messageKey: 'recommendations.weekOldListings',
+        messageParams: { count: weekOldListings.length },
       });
     }
 
@@ -206,31 +228,32 @@ export function useDeals() {
 
       // High ratio = negotiate
       if (deal.ratioOccasionNeuf > 40) {
-        tips.push(`offer ${targetPrice}€ (-15%)`);
+        tips.push(t('recommendations.tips.offerDiscount', { price: targetPrice }));
       }
 
-      // Small lot
-      if (deal.tomes < 5) {
-        tips.push(`look for bigger lot (+${5 - deal.tomes} vols = +${(5 - deal.tomes) * 2} pts)`);
+      // Small lot (le seuil de bonus volume réel est à 10 tomes, cf shared/scoring.ts)
+      if (deal.tomes < 10) {
+        tips.push(t('recommendations.tips.lookBiggerLot', { vols: 10 - deal.tomes }));
       }
 
       // Missing condition info
       if (!deal.etatPhysique) {
-        tips.push(`ask about condition (+3 pts if Mint)`);
+        tips.push(t('recommendations.tips.askCondition'));
       }
 
       // Bad condition = demand discount
       if (deal.etatPhysique === 'Acceptable') {
-        tips.push(`"Acceptable" = -12 pts, demand extra discount`);
+        tips.push(t('recommendations.tips.acceptableDiscount'));
       } else if (deal.etatPhysique === 'BE') {
-        tips.push(`"Good" = -5 pts, negotiate to compensate`);
+        tips.push(t('recommendations.tips.goodDiscount'));
       }
 
       if (tips.length > 0) {
         recommandations.push({
           type: 'info',
           icon: '💡',
-          message: `"${deal.serie}" (${deal.score}): ${tips[0]}`,
+          messageKey: 'recommendations.improvableTip',
+          messageParams: { name: deal.serie, score: deal.score, tip: tips[0] },
           dealId: deal.id,
           dealStatus: 'Actif',
         });
@@ -254,7 +277,15 @@ export function useDeals() {
           recommandations.push({
             type: 'info',
             icon: '⚖️',
-            message: `${dealsGroupe.length}x "${best.serie}": pick ${best.prixParTome.toFixed(2)}€/vol (${best.score}pts) over ${worst.prixParTome.toFixed(2)}€/vol (${worst.score}pts)`,
+            messageKey: 'recommendations.compareSeries',
+            messageParams: {
+              count: dealsGroupe.length,
+              name: best.serie,
+              bestPrice: best.prixParTome.toFixed(2),
+              bestScore: best.score,
+              worstPrice: worst.prixParTome.toFixed(2),
+              worstScore: worst.score,
+            },
           });
         }
       }
@@ -270,7 +301,8 @@ export function useDeals() {
       recommandations.push({
         type: 'info',
         icon: '📊',
-        message: `Success rate: ${successRate}%. Missed ${rates.length} deals (${economieRatee.toFixed(0)}€). Enable Vinted alerts!`,
+        messageKey: 'recommendations.successRate',
+        messageParams: { rate: successRate, count: rates.length, amount: economieRatee.toFixed(0) },
       });
     }
 
@@ -279,7 +311,8 @@ export function useDeals() {
       recommandations.push({
         type: 'info',
         icon: '🎯',
-        message: `Avg score: ${moyenneScoreActifs}/100. Tip: target lots with 10+ volumes for better deals.`,
+        messageKey: 'recommendations.lowAvgScore',
+        messageParams: { score: moyenneScoreActifs },
       });
     }
 
@@ -291,7 +324,8 @@ export function useDeals() {
       recommandations.push({
         type: 'info',
         icon: '🔄',
-        message: `${duplicates.length} series already owned. Watch out for duplicates!`,
+        messageKey: 'recommendations.duplicates',
+        messageParams: { count: duplicates.length },
       });
     }
 
@@ -303,7 +337,8 @@ export function useDeals() {
         recommandations.push({
           type: 'info',
           icon: '💰',
-          message: `Budget: ${budgetActifs.toFixed(0)}€. Prioritize: ${priorities.map(d => d.serie).join(', ')}`,
+          messageKey: 'recommendations.highBudget',
+          messageParams: { amount: budgetActifs.toFixed(0), names: priorities.map(d => d.serie).join(', ') },
         });
       }
     }
@@ -311,11 +346,12 @@ export function useDeals() {
     // Small lots = high shipping
     const smallLots = actifs.filter(d => d.tomes <= 3);
     if (smallLots.length >= 3) {
-      const shippingEst = smallLots.length * 4;
+      const shippingEst = estimerFraisPort(smallLots.length, smallLots.reduce((s, d) => s + d.tomes, 0));
       recommandations.push({
         type: 'info',
         icon: '📬',
-        message: `${smallLots.length} small lots (≤3 vols). Estimated shipping: ~${shippingEst}€. Prefer bigger lots!`,
+        messageKey: 'recommendations.smallLots',
+        messageParams: { count: smallLots.length, shipping: shippingEst },
       });
     }
 
@@ -327,7 +363,8 @@ export function useDeals() {
       recommandations.push({
         type: 'success',
         icon: '📚',
-        message: `${totalTomesActifs} volumes tracked! Potential savings: ${economieActifs.toFixed(0)}€ (${savingsPercent}% off retail).`,
+        messageKey: 'recommendations.goodCollection',
+        messageParams: { count: totalTomesActifs, savings: economieActifs.toFixed(0), percent: savingsPercent },
       });
     }
 
@@ -336,7 +373,8 @@ export function useDeals() {
       recommandations.push({
         type: 'success',
         icon: '🏆',
-        message: `Nice! ${achetes.length} purchases, ${totalTomesAchetes} volumes, ${economieRealisee.toFixed(0)}€ saved!`,
+        messageKey: 'recommendations.congrats',
+        messageParams: { count: achetes.length, volumes: totalTomesAchetes, saved: economieRealisee.toFixed(0) },
       });
     }
 
@@ -346,7 +384,7 @@ export function useDeals() {
       recommandations.push({
         type: 'info',
         icon: '👋',
-        message: `Welcome! Add your first deals and compare prices to find the best offers.`,
+        messageKey: 'recommendations.welcome',
       });
     }
 
@@ -355,7 +393,7 @@ export function useDeals() {
       recommandations.push({
         type: 'info',
         icon: '📈',
-        message: `Pro tip: Best deals have ≤35% ratio, 10+ volumes, Mint/Like New condition.`,
+        messageKey: 'recommendations.proTip',
       });
     }
 
@@ -380,7 +418,7 @@ export function useDeals() {
   const budget = useMemo(() => {
     const actifs = deals.filter((d) => d.etat === 'Actif');
     const total = actifs.reduce((sum, d) => sum + d.prix, 0);
-    const fraisPort = Math.ceil(actifs.length * 4);
+    const fraisPort = estimerFraisPort(actifs.length, actifs.reduce((sum, d) => sum + d.tomes, 0));
     const totalReel = total + fraisPort;
     const valeurNeuf = actifs.reduce((sum, d) => sum + d.tomes * d.prixNeuf, 0);
     const economie = valeurNeuf - totalReel;
