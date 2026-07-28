@@ -17,6 +17,8 @@ interface DealRowProps {
 
 // Editable cell style - shows it's clickable/editable
 const editableCellClass = "cursor-text hover:bg-accent/5 rounded transition-colors group/cell relative";
+// Persistent dotted underline on the value itself, so the edit affordance is visible without hovering
+const editableValueClass = "border-b border-dotted border-zinc-300 dark:border-zinc-700 group-hover/cell:border-accent/50 transition-colors";
 
 // Small edit indicator component
 function EditHint() {
@@ -39,6 +41,8 @@ export const DealRow = memo(function DealRow({
   const updateDeal = useDealsStore((s) => s.updateDeal);
   const openEditModal = useUiStore((s) => s.openEditModal);
   const toggleCompareSelection = useUiStore((s) => s.toggleCompareSelection);
+  const highlightDealId = useUiStore((s) => s.highlightDealId);
+  const isHighlighted = highlightDealId === deal.id;
 
   const [editing, setEditing] = useState<EditableField>(null);
   const [editValue, setEditValue] = useState('');
@@ -129,13 +133,14 @@ export const DealRow = memo(function DealRow({
 
   return (
     <tr
-      className={`transition-colors group ${
+      id={`deal-row-${deal.id}`}
+      className={`transition-[background-color,box-shadow] duration-300 group ${
         isSelected
           ? 'bg-accent/5 hover:bg-accent/10'
           : isEven
             ? 'bg-white dark:bg-zinc-950 hover:bg-zinc-50 dark:hover:bg-zinc-900'
             : 'bg-zinc-50/50 dark:bg-zinc-900/50 hover:bg-zinc-100 dark:hover:bg-zinc-800'
-      }`}
+      } ${isHighlighted ? 'ring-2 ring-accent ring-inset' : ''}`}
     >
       {/* Compare checkbox */}
       <td className="px-2 py-3 w-10">
@@ -171,7 +176,7 @@ export const DealRow = memo(function DealRow({
             className="w-full px-2 py-1 border-2 border-accent rounded bg-white dark:bg-zinc-800 text-zinc-900 dark:text-white font-medium focus:outline-none"
           />
         ) : (
-          <>{deal.serie}<EditHint /></>
+          <><span className={editableValueClass}>{deal.serie}</span><EditHint /></>
         )}
       </td>
 
@@ -193,7 +198,7 @@ export const DealRow = memo(function DealRow({
             className="w-16 px-2 py-1 border-2 border-accent rounded bg-white dark:bg-zinc-800 text-zinc-900 dark:text-white text-right focus:outline-none"
           />
         ) : (
-          <>{deal.tomes}<EditHint /></>
+          <><span className={editableValueClass}>{deal.tomes}</span><EditHint /></>
         )}
       </td>
 
@@ -216,7 +221,7 @@ export const DealRow = memo(function DealRow({
             className="w-20 px-2 py-1 border-2 border-accent rounded bg-white dark:bg-zinc-800 text-zinc-900 dark:text-white text-right focus:outline-none"
           />
         ) : (
-          <>{deal.prixParTome.toFixed(2)}€<EditHint /></>
+          <><span className={editableValueClass}>{deal.prixParTome.toFixed(2)}€</span><EditHint /></>
         )}
       </td>
 

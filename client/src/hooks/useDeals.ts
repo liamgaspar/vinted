@@ -86,6 +86,7 @@ export function useDeals() {
         type: 'urgent',
         icon: '🔥',
         message: `${dealsExceptionnels.length} exceptional deal(s) (90+): ${names}. Buy now!`,
+        dealId: dealsExceptionnels[0].id,
       });
     }
 
@@ -97,6 +98,7 @@ export function useDeals() {
         type: 'urgent',
         icon: '⏰',
         message: `${dealsUrgents.length} urgent deal(s): ${names}. Rare items, won't last!`,
+        dealId: dealsUrgents[0].id,
       });
     }
 
@@ -126,6 +128,7 @@ export function useDeals() {
         type: 'warning',
         icon: '💸',
         message: `"${worst.serie}" at ${worst.prixParTome.toFixed(2)}€/vol is expensive. Offer ${targetPrice}€ (-15%).`,
+        dealId: worst.id,
       });
     }
 
@@ -159,6 +162,7 @@ export function useDeals() {
         type: 'warning',
         icon: '🚫',
         message: `"${worst.serie}" (${worst.score}/100) is overpriced. Max price: ${idealPrice}€ (currently ${worst.prix}€).`,
+        dealId: worst.id,
       });
     }
 
@@ -223,6 +227,7 @@ export function useDeals() {
           type: 'info',
           icon: '💡',
           message: `"${deal.serie}" (${deal.score}): ${tips[0]}`,
+          dealId: deal.id,
         });
       }
     });
