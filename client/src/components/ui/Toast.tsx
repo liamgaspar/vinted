@@ -29,9 +29,13 @@ export const useToast = create<ToastState>((set, get) => ({
     if (timeoutId) clearTimeout(timeoutId);
 
     const duration = options?.duration ?? 3000;
-    const newTimeoutId = setTimeout(() => {
-      set({ data: null, timeoutId: null });
-    }, duration);
+    // Toasts carrying a recovery action (e.g. Undo) must not auto-dismiss,
+    // otherwise the user could lose data if they react after `duration`.
+    const newTimeoutId = options?.action
+      ? null
+      : setTimeout(() => {
+          set({ data: null, timeoutId: null });
+        }, duration);
 
     set({
       data: { message, action: options?.action, duration },

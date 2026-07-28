@@ -18,10 +18,11 @@ export function DealTable({ deals, status, economie }: DealTableProps) {
   const { t } = useTranslation();
   const openAddModal = useUiStore((s) => s.openAddModal);
   const compareDeals = useUiStore((s) => s.compareDeals);
+  const collapsed = useUiStore((s) => s.collapsedTables[status]);
+  const toggleTableCollapsed = useUiStore((s) => s.toggleTableCollapsed);
 
   const [sortBy, setSortBy] = useState<SortBy>('score');
   const [sortDir, setSortDir] = useState<SortDir>('desc');
-  const [collapsed, setCollapsed] = useState(status === 'Raté');
 
   const sortedDeals = useMemo(() => {
     const copy = [...deals];
@@ -93,7 +94,7 @@ export function DealTable({ deals, status, economie }: DealTableProps) {
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-1.5">
             <label htmlFor={`sort-${status}`} className="text-xs font-bold text-zinc-400 uppercase tracking-wider">
-              Sort
+              {t('dealTable.sort')}
             </label>
             <select
               id={`sort-${status}`}
@@ -102,15 +103,16 @@ export function DealTable({ deals, status, economie }: DealTableProps) {
               className="px-2 py-1 rounded text-xs font-bold border-2 border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-600 dark:text-zinc-300 cursor-pointer transition-[color,background-color,border-color,transform] active:scale-[0.96]"
             >
               <option value="score">{t('dealTable.score')}</option>
-              <option value="prix">Price</option>
+              <option value="prix">{t('dealTable.price')}</option>
               <option value="prixParTome">€/vol</option>
-              <option value="pourcentage">% saved</option>
-              <option value="dateAjout">Date added</option>
+              <option value="pourcentage">{t('dealTable.percentSaved')}</option>
+              <option value="dateAjout">{t('dealTable.dateAdded')}</option>
             </select>
             <button
               onClick={() => setSortDir((d) => (d === 'asc' ? 'desc' : 'asc'))}
               className="p-1.5 rounded border-2 border-zinc-200 dark:border-zinc-700 text-zinc-400 hover:text-accent hover:border-accent transition-[color,background-color,border-color,transform] active:scale-[0.96]"
-              title={sortDir === 'asc' ? 'Ascending' : 'Descending'}
+              title={sortDir === 'asc' ? t('dealTable.ascending') : t('dealTable.descending')}
+              aria-label={sortDir === 'asc' ? t('dealTable.ascending') : t('dealTable.descending')}
             >
               {sortDir === 'asc' ? <ArrowUp size={14} /> : <ArrowDown size={14} />}
             </button>
@@ -125,9 +127,10 @@ export function DealTable({ deals, status, economie }: DealTableProps) {
             </button>
           )}
           <button
-            onClick={() => setCollapsed((c) => !c)}
+            onClick={() => toggleTableCollapsed(status)}
             className="p-1.5 rounded border-2 border-zinc-200 dark:border-zinc-700 text-zinc-400 hover:text-accent hover:border-accent transition-[color,background-color,border-color,transform] active:scale-[0.96]"
-            title={collapsed ? 'Expand' : 'Collapse'}
+            title={collapsed ? t('dealTable.expand') : t('dealTable.collapse')}
+            aria-label={collapsed ? t('dealTable.expand') : t('dealTable.collapse')}
           >
             {collapsed ? <ChevronDown size={16} /> : <ChevronUp size={16} />}
           </button>

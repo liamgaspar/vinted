@@ -69,7 +69,15 @@
     "lost": "perdu",
     "noActiveDeals": "Aucun deal actif",
     "noPurchases": "Aucun achat pour l'instant",
-    "noMissedDeals": "Aucun deal raté !"
+    "noMissedDeals": "Aucun deal raté !",
+    "sort": "Trier",
+    "price": "Prix",
+    "percentSaved": "% économisé",
+    "dateAdded": "Date d'ajout",
+    "ascending": "Croissant",
+    "descending": "Décroissant",
+    "expand": "Déplier",
+    "collapse": "Replier"
   },
   "emptyState": {
     "activeHint": "Trouve des deals sur Vinted et suis-les ici pour comparer les prix",

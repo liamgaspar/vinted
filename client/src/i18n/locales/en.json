@@ -69,7 +69,15 @@
     "lost": "lost",
     "noActiveDeals": "No active deals yet",
     "noPurchases": "No purchases yet",
-    "noMissedDeals": "No missed deals!"
+    "noMissedDeals": "No missed deals!",
+    "sort": "Sort",
+    "price": "Price",
+    "percentSaved": "% saved",
+    "dateAdded": "Date added",
+    "ascending": "Ascending",
+    "descending": "Descending",
+    "expand": "Expand",
+    "collapse": "Collapse"
   },
   "emptyState": {
     "activeHint": "Find deals on Vinted and track them here to compare prices",
