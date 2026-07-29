@@ -61,6 +61,18 @@ Then serve `client/dist/` from that path. Example nginx location:
 location /vinted-tracker/ {
     alias /path/to/vinted-tracker/client/dist/;
     try_files $uri $uri/ /vinted-tracker/index.html;
+
+    # index.html must never be cached: it references the hashed JS/CSS filenames,
+    # so a stale copy (iOS Safari in particular caches HTML aggressively) keeps
+    # loading old assets even after a fresh deploy.
+    location = /vinted-tracker/index.html {
+        add_header Cache-Control "no-cache, must-revalidate";
+    }
+
+    # Hashed JS/CSS filenames change on every build, so these can be cached forever.
+    location ~* \.(js|css)$ {
+        add_header Cache-Control "public, max-age=31536000, immutable";
+    }
 }
 ```
 
