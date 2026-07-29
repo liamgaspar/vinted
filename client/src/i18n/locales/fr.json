@@ -32,8 +32,8 @@
     "cancel": "Annuler",
     "save": "Sauver",
     "addDeal": "Ajouter",
-    "confirm": "Confirmer",
-    "backToEdit": "Modifier",
+    "seeAnalysis": "Voir l'analyse",
+    "back": "Retour",
     "analysis": "Analyse",
     "volumeBonus": "Taille du lot",
     "preview": {
@@ -43,6 +43,16 @@
       "off": "de réduction",
       "saved": "économisés",
       "fillFields": "Remplis le formulaire pour voir l'analyse"
+    },
+    "scoreChart": {
+      "title": "Composition du score",
+      "price": "Prix",
+      "condition": "État",
+      "coverage": "Couverture",
+      "rarity": "Rareté",
+      "age": "Ancienneté",
+      "strength": "{{category}} est ce qui tire le plus la note vers le haut ({{value}}/{{max}} pts).",
+      "weakness": "{{category}} est ce qui la plombe le plus ({{value}}/{{max}} pts)."
     }
   },
   "condition": {

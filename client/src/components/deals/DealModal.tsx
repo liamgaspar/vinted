@@ -6,6 +6,7 @@ import { useDealsStore } from '@/store/dealsStore';
 import { formatPrice } from '@/lib/formatPrice';
 import { calculateScore, getScoreColorClass, getScoreBgClass } from '@shared/scoring';
 import type { DealInput, EtatPhysique, Rarete, Anciennete } from '@shared/types';
+import { ScoreBreakdownChart } from './ScoreBreakdownChart';
 
 type Step = 'form' | 'analysis';
 
@@ -357,7 +358,7 @@ export function DealModal() {
                             ? 'bg-purple-500/10 text-purple-600 border-purple-500'
                             : opt.value === 'Recherche'
                               ? 'bg-orange-500/10 text-orange-600 border-orange-500'
-                              : 'bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300 border-zinc-400'
+                              : 'bg-zinc-700 dark:bg-zinc-200 text-white dark:text-zinc-900 border-zinc-700 dark:border-zinc-200'
                           : 'bg-white dark:bg-zinc-900 text-zinc-600 dark:text-zinc-400 border-zinc-200 dark:border-zinc-700 hover:border-zinc-400'
                       }`}
                     >
@@ -388,7 +389,7 @@ export function DealModal() {
                             ? 'bg-green-500/10 text-green-600 border-green-500'
                             : opt.value === 'quelques_semaines'
                               ? 'bg-yellow-500/10 text-yellow-600 border-yellow-500'
-                              : 'bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300 border-zinc-400'
+                              : 'bg-zinc-700 dark:bg-zinc-200 text-white dark:text-zinc-900 border-zinc-700 dark:border-zinc-200'
                           : 'bg-white dark:bg-zinc-900 text-zinc-600 dark:text-zinc-400 border-zinc-200 dark:border-zinc-700 hover:border-zinc-400'
                       }`}
                     >
@@ -446,29 +447,17 @@ export function DealModal() {
                     </div>
                   </div>
 
-                  {/* Breakdown */}
-                  {preview.v2Bonus !== 0 && (
+                  {/* Score composition chart */}
+                  <div className="mb-4">
+                    <ScoreBreakdownChart breakdown={preview.breakdown} />
+                  </div>
+
+                  {/* Lot size bonus/malus (hors composition principale, ±2pts) */}
+                  {preview.breakdown.volumeBonus !== 0 && (
                     <div className="flex flex-wrap gap-2 text-xs mb-4">
-                      {preview.breakdown.etatPhysiqueBonus !== 0 && (
-                        <span className={`px-2 py-1 rounded font-medium ${preview.breakdown.etatPhysiqueBonus > 0 ? 'bg-green-500/10 text-green-600' : 'bg-red-500/10 text-red-500'}`}>
-                          {t('dealModal.condition')} {preview.breakdown.etatPhysiqueBonus > 0 ? '+' : ''}{preview.breakdown.etatPhysiqueBonus}
-                        </span>
-                      )}
-                      {preview.breakdown.coverageBonus !== 0 && (
-                        <span className={`px-2 py-1 rounded font-medium ${preview.breakdown.coverageBonus > 0 ? 'bg-green-500/10 text-green-600' : 'bg-red-500/10 text-red-500'}`}>
-                          {t('legend.coverage')} {preview.breakdown.coverageBonus > 0 ? '+' : ''}{preview.breakdown.coverageBonus}
-                        </span>
-                      )}
-                      {preview.breakdown.rareteBonus > 0 && (
-                        <span className="px-2 py-1 bg-purple-500/10 text-purple-600 rounded font-medium">
-                          {t('dealModal.rarity')} +{preview.breakdown.rareteBonus}
-                        </span>
-                      )}
-                      {preview.breakdown.volumeBonus !== 0 && (
-                        <span className={`px-2 py-1 rounded font-medium ${preview.breakdown.volumeBonus > 0 ? 'bg-accent/10 text-accent' : 'bg-red-500/10 text-red-500'}`}>
-                          {t('dealModal.volumeBonus')} {preview.breakdown.volumeBonus > 0 ? '+' : ''}{preview.breakdown.volumeBonus}
-                        </span>
-                      )}
+                      <span className={`px-2 py-1 rounded font-medium ${preview.breakdown.volumeBonus > 0 ? 'bg-accent/10 text-accent' : 'bg-red-500/10 text-red-500'}`}>
+                        {t('dealModal.volumeBonus')} {preview.breakdown.volumeBonus > 0 ? '+' : ''}{preview.breakdown.volumeBonus}
+                      </span>
                     </div>
                   )}
 
@@ -499,7 +488,7 @@ export function DealModal() {
                 onClick={handleConfirm}
                 className="flex-1 px-4 py-3 bg-accent hover:bg-accent/90 text-white rounded-lg font-bold transition-[background-color,transform] active:scale-[0.96]"
               >
-                {t('dealModal.confirm')}
+                {t('dealModal.seeAnalysis')}
               </button>
             </>
           ) : (
@@ -508,7 +497,7 @@ export function DealModal() {
                 onClick={() => setStep('form')}
                 className="flex-1 px-4 py-3 border-2 border-zinc-300 dark:border-zinc-700 hover:border-zinc-400 rounded-lg font-medium transition-[color,border-color,transform] active:scale-[0.96] text-zinc-600 dark:text-zinc-400"
               >
-                {t('dealModal.backToEdit')}
+                {t('dealModal.back')}
               </button>
               <button
                 onClick={handleFinalSave}

@@ -32,8 +32,8 @@
     "cancel": "Cancel",
     "save": "Save",
     "addDeal": "Add Deal",
-    "confirm": "Confirm",
-    "backToEdit": "Edit",
+    "seeAnalysis": "See analysis",
+    "back": "Back",
     "analysis": "Analysis",
     "volumeBonus": "Lot size",
     "preview": {
@@ -43,6 +43,16 @@
       "off": "off",
       "saved": "saved",
       "fillFields": "Fill in the form to see the analysis"
+    },
+    "scoreChart": {
+      "title": "Score breakdown",
+      "price": "Price",
+      "condition": "Condition",
+      "coverage": "Coverage",
+      "rarity": "Rarity",
+      "age": "Listing age",
+      "strength": "{{category}} is the biggest driver of this score ({{value}}/{{max}} pts).",
+      "weakness": "{{category}} is what's holding it back ({{value}}/{{max}} pts)."
     }
   },
   "condition": {

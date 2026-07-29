@@ -294,6 +294,8 @@ export function calculateScore(deal: DealInput): ScoreResult {
       completudeBonus: 0,
       coverageBonus: coverageBonus,
       ancienneteBonus: ancienneteBonus,
+      etatPhysiqueScore: Math.round(etatScore),
+      coverageScore: Math.round(coverageScore),
     },
   };
 }

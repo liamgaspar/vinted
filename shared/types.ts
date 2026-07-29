@@ -54,6 +54,9 @@ export interface ScoreBreakdown {
   completudeBonus: number;
   coverageBonus: number; // Bonus/malus basé sur le % de la série possédée
   ancienneteBonus: number; // Bonus si annonce ancienne (vendeur motivé)
+  // Valeurs brutes (pas des deltas) pour visualiser la composition du score
+  etatPhysiqueScore: number; // 0-15
+  coverageScore: number; // 0-10
 }
 
 export type Urgence = 'haute' | 'moyenne' | 'basse';
