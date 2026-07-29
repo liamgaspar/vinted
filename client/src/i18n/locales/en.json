@@ -32,8 +32,9 @@
     "cancel": "Cancel",
     "save": "Save",
     "addDeal": "Add Deal",
+    "confirm": "Confirm",
+    "backToEdit": "Edit",
     "analysis": "Analysis",
-    "conditionPointsHint": "{{points}} pts to the score for this condition",
     "volumeBonus": "Lot size",
     "preview": {
       "complete": "Complete",

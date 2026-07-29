@@ -68,14 +68,17 @@ export const useDealsStore = create<DealsState>()(
           id: newId,
           serie: dealInput.serie,
           tomes: dealInput.tomes,
+          tomesTotal: dealInput.tomesTotal,
           prix: dealInput.prix,
           prixNeuf: dealInput.prixNeuf,
           etat: dealInput.etat || 'Actif',
           dateAjout: today,
           etatPhysique: dealInput.etatPhysique,
           rarete: dealInput.rarete,
+          anciennete: dealInput.anciennete,
           serieComplete: dealInput.serieComplete,
           commenceTome1: dealInput.commenceTome1,
+          url: dealInput.url,
         };
         set({ deals: [...deals, newDeal] });
       },

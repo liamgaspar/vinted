@@ -7,6 +7,8 @@ import { formatPrice } from '@/lib/formatPrice';
 import { calculateScore, getScoreColorClass, getScoreBgClass } from '@shared/scoring';
 import type { DealInput, EtatPhysique, Rarete, Anciennete } from '@shared/types';
 
+type Step = 'form' | 'analysis';
+
 export function DealModal() {
   const { t } = useTranslation();
   const { showDealModal, editingDeal, closeModal } = useUiStore();
@@ -15,7 +17,7 @@ export function DealModal() {
   const [seriesError, setSeriesError] = useState(false);
   const [visible, setVisible] = useState(false);
   const [exiting, setExiting] = useState(false);
-  const [showAdvanced, setShowAdvanced] = useState(false);
+  const [step, setStep] = useState<Step>('form');
   const [form, setForm] = useState<DealInput>({
     serie: '',
     tomes: 1,
@@ -61,9 +63,7 @@ export function DealModal() {
       });
     }
     setSeriesError(false);
-    setShowAdvanced(
-      !!editingDeal && (!!editingDeal.url || !!editingDeal.tomesTotal || !!editingDeal.rarete || !!editingDeal.anciennete)
-    );
+    setStep('form');
   }, [editingDeal, showDealModal]);
 
   // Fermeture avec Escape
@@ -96,12 +96,21 @@ export function DealModal() {
 
   if (!visible) return null;
 
-  const handleSave = () => {
+  const preview =
+    form.serie && form.tomes > 0 && form.prix > 0 && form.prixNeuf > 0
+      ? calculateScore(form)
+      : null;
+
+  const handleConfirm = () => {
     if (!form.serie.trim()) {
       setSeriesError(true);
       return;
     }
     setSeriesError(false);
+    setStep('analysis');
+  };
+
+  const handleFinalSave = () => {
     if (editingDeal) {
       updateDeal(editingDeal.id, form);
     } else {
@@ -110,18 +119,14 @@ export function DealModal() {
     closeModal();
   };
 
-  const preview =
-    form.serie && form.tomes > 0 && form.prix > 0 && form.prixNeuf > 0
-      ? calculateScore(form)
-      : null;
-
-  // Deltas réels par rapport à la valeur neutre (7.5 pts si état non renseigné),
-  // cf. shared/scoring.ts etatScore. Doivent rester synchronisés avec ce fichier.
-  const etatPhysiqueOptions: { value: EtatPhysique; label: string; adjust: string }[] = [
-    { value: 'Neuf', label: t('condition.new'), adjust: '+8' },
-    { value: 'TBE', label: t('condition.likeNew'), adjust: '+3' },
-    { value: 'BE', label: t('condition.good'), adjust: '-2' },
-    { value: 'Acceptable', label: t('condition.fair'), adjust: '-7' },
+  // Pas de points affichés ici volontairement : montrer l'impact sur le score
+  // pendant la saisie inciterait à choisir un état/rareté pour optimiser la
+  // note plutôt que pour décrire honnêtement le lot.
+  const etatPhysiqueOptions: { value: EtatPhysique; label: string }[] = [
+    { value: 'Neuf', label: t('condition.new') },
+    { value: 'TBE', label: t('condition.likeNew') },
+    { value: 'BE', label: t('condition.good') },
+    { value: 'Acceptable', label: t('condition.fair') },
   ];
 
   const rareteOptions: { value: Rarete; label: string }[] = [
@@ -144,7 +149,7 @@ export function DealModal() {
       onClick={closeModal}
     >
       <div
-        className={`bg-white dark:bg-zinc-900 border-2 border-zinc-200 dark:border-zinc-800 rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto ${
+        className={`bg-white dark:bg-zinc-900 border-2 border-zinc-200 dark:border-zinc-800 rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto ${
           exiting ? 'animate-modal-out' : 'animate-modal-in'
         }`}
         onClick={(e) => e.stopPropagation()}
@@ -163,9 +168,8 @@ export function DealModal() {
         </div>
 
         <div className="p-6">
-          <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
-            {/* Left column - Form */}
-            <div className="lg:col-span-3 space-y-5">
+          {step === 'form' ? (
+            <div className="space-y-5">
               {/* Series */}
               <div>
                 <label className="block text-xs font-bold text-zinc-500 dark:text-zinc-400 mb-2 uppercase tracking-wider">
@@ -194,7 +198,35 @@ export function DealModal() {
                 )}
               </div>
 
-              {/* Grid for numbers - core fields only */}
+              {/* URL Vinted */}
+              <div>
+                <label className="block text-xs font-bold text-zinc-500 dark:text-zinc-400 mb-2 uppercase tracking-wider">
+                  {t('dealModal.vintedUrl')} <span className="font-normal">({t('dealModal.optional')})</span>
+                </label>
+                <div className="relative">
+                  <Link size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400" />
+                  <input
+                    type="url"
+                    value={form.url || ''}
+                    onChange={(e) => setForm({ ...form, url: e.target.value || undefined })}
+                    placeholder="https://www.vinted.fr/items/..."
+                    className="w-full pl-10 pr-4 py-3 border-2 border-zinc-200 dark:border-zinc-700 rounded-lg focus:border-accent focus:outline-none transition-colors bg-white dark:bg-zinc-800 dark:text-white dark:placeholder-zinc-500"
+                  />
+                  {form.url && (
+                    <a
+                      href={form.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-accent hover:text-accent/80 transition-colors"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <ExternalLink size={18} />
+                    </a>
+                  )}
+                </div>
+              </div>
+
+              {/* Grid for numbers */}
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs font-bold text-zinc-500 dark:text-zinc-400 mb-2 uppercase tracking-wider">
@@ -210,6 +242,25 @@ export function DealModal() {
                 </div>
                 <div>
                   <label className="block text-xs font-bold text-zinc-500 dark:text-zinc-400 mb-2 uppercase tracking-wider">
+                    {t('dealModal.totalVols')} <span className="font-normal">({t('dealModal.optional')})</span>
+                  </label>
+                  <input
+                    type="number"
+                    min="1"
+                    placeholder="?"
+                    value={form.tomesTotal || ''}
+                    onChange={(e) => {
+                      const val = parseInt(e.target.value);
+                      setForm({
+                        ...form,
+                        tomesTotal: val > 0 ? val : undefined,
+                      });
+                    }}
+                    className="w-full px-4 py-3 border-2 border-zinc-200 dark:border-zinc-700 rounded-lg text-lg focus:border-accent focus:outline-none transition-colors bg-white dark:bg-zinc-800 dark:text-white dark:placeholder-zinc-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-zinc-500 dark:text-zinc-400 mb-2 uppercase tracking-wider">
                     {t('dealModal.price')}
                   </label>
                   <input
@@ -221,7 +272,7 @@ export function DealModal() {
                     className="w-full px-4 py-3 border-2 border-zinc-200 dark:border-zinc-700 rounded-lg text-lg focus:border-accent focus:outline-none transition-colors bg-white dark:bg-zinc-800 dark:text-white"
                   />
                 </div>
-                <div className="col-span-2">
+                <div>
                   <label className="block text-xs font-bold text-zinc-500 dark:text-zinc-400 mb-2 uppercase tracking-wider">
                     {t('dealModal.newPricePerVol')}
                   </label>
@@ -255,13 +306,12 @@ export function DealModal() {
               {/* Condition */}
               <div>
                 <label className="block text-xs font-bold text-zinc-500 dark:text-zinc-400 mb-2 uppercase tracking-wider">
-                  {t('dealModal.condition')} <span className="text-xs font-normal text-zinc-400">(15pts)</span>
+                  {t('dealModal.condition')}
                 </label>
                 <div className="grid grid-cols-4 gap-2">
                   {etatPhysiqueOptions.map((opt) => (
                     <button
                       key={opt.value}
-                      title={t('dealModal.conditionPointsHint', { points: opt.adjust })}
                       onClick={() =>
                         setForm({
                           ...form,
@@ -281,251 +331,193 @@ export function DealModal() {
                       }`}
                     >
                       {opt.label}
-                      <span className={`block text-xs ${
-                        opt.adjust.startsWith('+') ? 'text-green-600' :
-                        opt.adjust.startsWith('-') ? 'text-red-500' : 'text-zinc-500'
-                      }`}>
-                        {opt.adjust}
-                      </span>
                     </button>
                   ))}
                 </div>
               </div>
 
-              {/* Advanced options toggle */}
-              <button
-                type="button"
-                onClick={() => setShowAdvanced(!showAdvanced)}
-                className="text-sm font-medium text-accent hover:underline"
-              >
-                {showAdvanced ? '▾' : '▸'} {t('dealModal.advancedOptions')}
-              </button>
-
-              {showAdvanced && (
-                <div className="space-y-5">
-                  {/* URL Vinted */}
-                  <div>
-                    <label className="block text-xs font-bold text-zinc-500 dark:text-zinc-400 mb-2 uppercase tracking-wider">
-                      {t('dealModal.vintedUrl')} <span className="font-normal">({t('dealModal.optional')})</span>
-                    </label>
-                    <div className="relative">
-                      <Link size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400" />
-                      <input
-                        type="url"
-                        value={form.url || ''}
-                        onChange={(e) => setForm({ ...form, url: e.target.value || undefined })}
-                        placeholder="https://www.vinted.fr/items/..."
-                        className="w-full pl-10 pr-4 py-3 border-2 border-zinc-200 dark:border-zinc-700 rounded-lg focus:border-accent focus:outline-none transition-colors bg-white dark:bg-zinc-800 dark:text-white dark:placeholder-zinc-500"
-                      />
-                      {form.url && (
-                        <a
-                          href={form.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="absolute right-3 top-1/2 -translate-y-1/2 text-accent hover:text-accent/80 transition-colors"
-                          onClick={(e) => e.stopPropagation()}
-                        >
-                          <ExternalLink size={18} />
-                        </a>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Total Vols */}
-                  <div>
-                    <label className="block text-xs font-bold text-zinc-500 dark:text-zinc-400 mb-2 uppercase tracking-wider">
-                      {t('dealModal.totalVols')} <span className="font-normal">({t('dealModal.optional')})</span>
-                    </label>
-                    <input
-                      type="number"
-                      min="1"
-                      placeholder="?"
-                      value={form.tomesTotal || ''}
-                      onChange={(e) => {
-                        const val = parseInt(e.target.value);
+              {/* Rarity */}
+              <div>
+                <label className="block text-xs font-bold text-zinc-500 dark:text-zinc-400 mb-2 uppercase tracking-wider">
+                  {t('dealModal.rarity')}
+                </label>
+                <div className="grid grid-cols-3 gap-2">
+                  {rareteOptions.map((opt) => (
+                    <button
+                      key={opt.value}
+                      onClick={() =>
                         setForm({
                           ...form,
-                          tomesTotal: val > 0 ? val : undefined,
-                        });
-                      }}
-                      className="w-full px-4 py-3 border-2 border-zinc-200 dark:border-zinc-700 rounded-lg text-lg focus:border-accent focus:outline-none transition-colors bg-white dark:bg-zinc-800 dark:text-white dark:placeholder-zinc-500"
-                    />
-                  </div>
+                          rarete: form.rarete === opt.value ? undefined : opt.value,
+                        })
+                      }
+                      className={`px-3 py-2 rounded-lg text-sm font-medium border-2 transition-[color,background-color,border-color,transform] active:scale-[0.96] ${
+                        form.rarete === opt.value
+                          ? opt.value === 'Rare'
+                            ? 'bg-purple-500/10 text-purple-600 border-purple-500'
+                            : opt.value === 'Recherche'
+                              ? 'bg-orange-500/10 text-orange-600 border-orange-500'
+                              : 'bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300 border-zinc-400'
+                          : 'bg-white dark:bg-zinc-900 text-zinc-600 dark:text-zinc-400 border-zinc-200 dark:border-zinc-700 hover:border-zinc-400'
+                      }`}
+                    >
+                      {opt.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
 
-                  {/* Rarity */}
-                  <div>
-                    <label className="block text-xs font-bold text-zinc-500 dark:text-zinc-400 mb-2 uppercase tracking-wider">
-                      {t('dealModal.rarity')}
-                    </label>
-                    <div className="grid grid-cols-3 gap-2">
-                      {rareteOptions.map((opt) => (
-                        <button
-                          key={opt.value}
-                          onClick={() =>
-                            setForm({
-                              ...form,
-                              rarete: form.rarete === opt.value ? undefined : opt.value,
-                            })
-                          }
-                          className={`px-3 py-2 rounded-lg text-sm font-medium border-2 transition-[color,background-color,border-color,transform] active:scale-[0.96] ${
-                            form.rarete === opt.value
-                              ? opt.value === 'Rare'
-                                ? 'bg-purple-500/10 text-purple-600 border-purple-500'
-                                : opt.value === 'Recherche'
-                                  ? 'bg-orange-500/10 text-orange-600 border-orange-500'
-                                  : 'bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300 border-zinc-400'
-                              : 'bg-white dark:bg-zinc-900 text-zinc-600 dark:text-zinc-400 border-zinc-200 dark:border-zinc-700 hover:border-zinc-400'
-                          }`}
-                        >
-                          {opt.label}
-                        </button>
-                      ))}
+              {/* Listing Age */}
+              <div>
+                <label className="block text-xs font-bold text-zinc-500 dark:text-zinc-400 mb-2 uppercase tracking-wider">
+                  {t('dealModal.listingAge')}
+                </label>
+                <div className="grid grid-cols-3 gap-2">
+                  {ancienneteOptions.map((opt) => (
+                    <button
+                      key={opt.value}
+                      onClick={() =>
+                        setForm({
+                          ...form,
+                          anciennete: form.anciennete === opt.value ? undefined : opt.value,
+                        })
+                      }
+                      className={`px-3 py-2 rounded-lg text-sm font-medium border-2 transition-[color,background-color,border-color,transform] active:scale-[0.96] ${
+                        form.anciennete === opt.value
+                          ? opt.value === 'ancien'
+                            ? 'bg-green-500/10 text-green-600 border-green-500'
+                            : opt.value === 'quelques_semaines'
+                              ? 'bg-yellow-500/10 text-yellow-600 border-yellow-500'
+                              : 'bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300 border-zinc-400'
+                          : 'bg-white dark:bg-zinc-900 text-zinc-600 dark:text-zinc-400 border-zinc-200 dark:border-zinc-700 hover:border-zinc-400'
+                      }`}
+                    >
+                      {opt.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          ) : (
+            /* Step 2 - Analysis */
+            <div className="space-y-4">
+              <div className="flex items-center gap-2 text-xs font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">
+                <TrendingUp size={14} />
+                {t('dealModal.analysis')}
+              </div>
+
+              {preview && (
+                <div className={`rounded-lg p-4 border-2 ${getScoreBgClass(preview.score)}`}>
+                  {/* Score */}
+                  <div className="flex items-center gap-4 mb-4">
+                    <div
+                      className={`text-5xl font-black tabular-nums cursor-help ${getScoreColorClass(preview.score)}`}
+                      title={t('legend.scoreTooltip')}
+                    >
+                      {preview.score}
+                    </div>
+                    <div className="flex-1">
+                      <div className="font-bold text-lg text-zinc-900 dark:text-white">
+                        {t(`scoring.recommendation.${preview.recommandation}`)}
+                      </div>
+                      <span className={`inline-block mt-1 px-2 py-0.5 rounded text-xs font-bold ${
+                        preview.scoreType === 'complete'
+                          ? 'bg-green-500/10 text-green-600'
+                          : 'bg-yellow-500/10 text-yellow-600'
+                      }`}>
+                        {preview.scoreType === 'complete' ? t('dealModal.preview.complete') : t('dealModal.preview.partial')}
+                      </span>
                     </div>
                   </div>
 
-                  {/* Listing Age */}
-                  <div>
-                    <label className="block text-xs font-bold text-zinc-500 dark:text-zinc-400 mb-2 uppercase tracking-wider">
-                      {t('dealModal.listingAge')}
-                    </label>
-                    <div className="grid grid-cols-3 gap-2">
-                      {ancienneteOptions.map((opt) => (
-                        <button
-                          key={opt.value}
-                          onClick={() =>
-                            setForm({
-                              ...form,
-                              anciennete: form.anciennete === opt.value ? undefined : opt.value,
-                            })
-                          }
-                          className={`px-3 py-2 rounded-lg text-sm font-medium border-2 transition-[color,background-color,border-color,transform] active:scale-[0.96] ${
-                            form.anciennete === opt.value
-                              ? opt.value === 'ancien'
-                                ? 'bg-green-500/10 text-green-600 border-green-500'
-                                : opt.value === 'quelques_semaines'
-                                  ? 'bg-yellow-500/10 text-yellow-600 border-yellow-500'
-                                  : 'bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300 border-zinc-400'
-                              : 'bg-white dark:bg-zinc-900 text-zinc-600 dark:text-zinc-400 border-zinc-200 dark:border-zinc-700 hover:border-zinc-400'
-                          }`}
-                        >
-                          {opt.label}
-                        </button>
-                      ))}
+                  {/* Stats */}
+                  <div className="grid grid-cols-3 gap-2 mb-4 text-center">
+                    <div className="bg-white/50 dark:bg-zinc-900/50 rounded-lg p-2">
+                      <div className="text-lg font-bold text-zinc-900 dark:text-white tabular-nums">{formatPrice(preview.prixParTome)}</div>
+                      <div className="text-xs text-zinc-500">{t('dealModal.preview.perVol')}</div>
+                    </div>
+                    <div className="bg-white/50 dark:bg-zinc-900/50 rounded-lg p-2">
+                      <div className="text-lg font-bold text-green-600 tabular-nums">{preview.pourcentage}%</div>
+                      <div className="text-xs text-zinc-500">{t('dealModal.preview.off')}</div>
+                    </div>
+                    <div className="bg-white/50 dark:bg-zinc-900/50 rounded-lg p-2">
+                      <div className="text-lg font-bold text-green-600 tabular-nums">{formatPrice(preview.economie)}</div>
+                      <div className="text-xs text-zinc-500">{t('dealModal.preview.saved')}</div>
                     </div>
                   </div>
+
+                  {/* Breakdown */}
+                  {preview.v2Bonus !== 0 && (
+                    <div className="flex flex-wrap gap-2 text-xs mb-4">
+                      {preview.breakdown.etatPhysiqueBonus !== 0 && (
+                        <span className={`px-2 py-1 rounded font-medium ${preview.breakdown.etatPhysiqueBonus > 0 ? 'bg-green-500/10 text-green-600' : 'bg-red-500/10 text-red-500'}`}>
+                          {t('dealModal.condition')} {preview.breakdown.etatPhysiqueBonus > 0 ? '+' : ''}{preview.breakdown.etatPhysiqueBonus}
+                        </span>
+                      )}
+                      {preview.breakdown.coverageBonus !== 0 && (
+                        <span className={`px-2 py-1 rounded font-medium ${preview.breakdown.coverageBonus > 0 ? 'bg-green-500/10 text-green-600' : 'bg-red-500/10 text-red-500'}`}>
+                          {t('legend.coverage')} {preview.breakdown.coverageBonus > 0 ? '+' : ''}{preview.breakdown.coverageBonus}
+                        </span>
+                      )}
+                      {preview.breakdown.rareteBonus > 0 && (
+                        <span className="px-2 py-1 bg-purple-500/10 text-purple-600 rounded font-medium">
+                          {t('dealModal.rarity')} +{preview.breakdown.rareteBonus}
+                        </span>
+                      )}
+                      {preview.breakdown.volumeBonus !== 0 && (
+                        <span className={`px-2 py-1 rounded font-medium ${preview.breakdown.volumeBonus > 0 ? 'bg-accent/10 text-accent' : 'bg-red-500/10 text-red-500'}`}>
+                          {t('dealModal.volumeBonus')} {preview.breakdown.volumeBonus > 0 ? '+' : ''}{preview.breakdown.volumeBonus}
+                        </span>
+                      )}
+                    </div>
+                  )}
+
+                  {/* Negotiation tip */}
+                  {preview.suggestionNego && (
+                    <div className="text-sm text-orange-600 bg-orange-500/10 px-3 py-2 rounded-lg flex items-center gap-2 font-medium">
+                      <AlertTriangle size={14} className="shrink-0" />
+                      {t('scoring.negotiateTo', { price: preview.suggestionNego.price })}
+                    </div>
+                  )}
                 </div>
               )}
             </div>
-
-            {/* Right column - Preview & Tips */}
-            <div className="lg:col-span-2">
-              <div className="lg:sticky lg:top-0 space-y-4">
-                <div className="flex items-center gap-2 text-xs font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">
-                  <TrendingUp size={14} />
-                  {t('dealModal.analysis')}
-                </div>
-
-                {preview ? (
-                  <div className={`rounded-lg p-4 border-2 ${getScoreBgClass(preview.score)}`}>
-                    {/* Score */}
-                    <div className="flex items-center gap-4 mb-4">
-                      <div
-                        className={`text-5xl font-black tabular-nums cursor-help ${getScoreColorClass(preview.score)}`}
-                        title={t('legend.scoreTooltip')}
-                      >
-                        {preview.score}
-                      </div>
-                      <div className="flex-1">
-                        <div className="font-bold text-lg text-zinc-900 dark:text-white">
-                          {t(`scoring.recommendation.${preview.recommandation}`)}
-                        </div>
-                        <span className={`inline-block mt-1 px-2 py-0.5 rounded text-xs font-bold ${
-                          preview.scoreType === 'complete'
-                            ? 'bg-green-500/10 text-green-600'
-                            : 'bg-yellow-500/10 text-yellow-600'
-                        }`}>
-                          {preview.scoreType === 'complete' ? t('dealModal.preview.complete') : t('dealModal.preview.partial')}
-                        </span>
-                      </div>
-                    </div>
-
-                    {/* Stats */}
-                    <div className="grid grid-cols-3 gap-2 mb-4 text-center">
-                      <div className="bg-white/50 dark:bg-zinc-900/50 rounded-lg p-2">
-                        <div className="text-lg font-bold text-zinc-900 dark:text-white tabular-nums">{formatPrice(preview.prixParTome)}</div>
-                        <div className="text-xs text-zinc-500">{t('dealModal.preview.perVol')}</div>
-                      </div>
-                      <div className="bg-white/50 dark:bg-zinc-900/50 rounded-lg p-2">
-                        <div className="text-lg font-bold text-green-600 tabular-nums">{preview.pourcentage}%</div>
-                        <div className="text-xs text-zinc-500">{t('dealModal.preview.off')}</div>
-                      </div>
-                      <div className="bg-white/50 dark:bg-zinc-900/50 rounded-lg p-2">
-                        <div className="text-lg font-bold text-green-600 tabular-nums">{formatPrice(preview.economie)}</div>
-                        <div className="text-xs text-zinc-500">{t('dealModal.preview.saved')}</div>
-                      </div>
-                    </div>
-
-                    {/* Breakdown */}
-                    {preview.v2Bonus !== 0 && (
-                      <div className="flex flex-wrap gap-2 text-xs mb-4">
-                        {preview.breakdown.etatPhysiqueBonus !== 0 && (
-                          <span className={`px-2 py-1 rounded font-medium ${preview.breakdown.etatPhysiqueBonus > 0 ? 'bg-green-500/10 text-green-600' : 'bg-red-500/10 text-red-500'}`}>
-                            {t('dealModal.condition')} {preview.breakdown.etatPhysiqueBonus > 0 ? '+' : ''}{preview.breakdown.etatPhysiqueBonus}
-                          </span>
-                        )}
-                        {preview.breakdown.coverageBonus !== 0 && (
-                          <span className={`px-2 py-1 rounded font-medium ${preview.breakdown.coverageBonus > 0 ? 'bg-green-500/10 text-green-600' : 'bg-red-500/10 text-red-500'}`}>
-                            {t('legend.coverage')} {preview.breakdown.coverageBonus > 0 ? '+' : ''}{preview.breakdown.coverageBonus}
-                          </span>
-                        )}
-                        {preview.breakdown.rareteBonus > 0 && (
-                          <span className="px-2 py-1 bg-purple-500/10 text-purple-600 rounded font-medium">
-                            {t('dealModal.rarity')} +{preview.breakdown.rareteBonus}
-                          </span>
-                        )}
-                        {preview.breakdown.volumeBonus !== 0 && (
-                          <span className={`px-2 py-1 rounded font-medium ${preview.breakdown.volumeBonus > 0 ? 'bg-accent/10 text-accent' : 'bg-red-500/10 text-red-500'}`}>
-                            {t('dealModal.volumeBonus')} {preview.breakdown.volumeBonus > 0 ? '+' : ''}{preview.breakdown.volumeBonus}
-                          </span>
-                        )}
-                      </div>
-                    )}
-
-                    {/* Negotiation tip */}
-                    {preview.suggestionNego && (
-                      <div className="text-sm text-orange-600 bg-orange-500/10 px-3 py-2 rounded-lg flex items-center gap-2 font-medium">
-                        <AlertTriangle size={14} className="shrink-0" />
-                        {t('scoring.negotiateTo', { price: preview.suggestionNego.price })}
-                      </div>
-                    )}
-                  </div>
-                ) : (
-                  <div className="rounded-lg p-6 border-2 border-dashed border-zinc-200 dark:border-zinc-700 text-center">
-                    <div className="text-4xl font-black text-zinc-200 dark:text-zinc-700 mb-2">--</div>
-                    <div className="text-sm text-zinc-400">
-                      {t('dealModal.preview.fillFields')}
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
+          )}
         </div>
 
         {/* Footer */}
         <div className="px-6 py-4 border-t-2 border-zinc-100 dark:border-zinc-800 flex gap-3">
-          <button
-            onClick={closeModal}
-            className="flex-1 px-4 py-3 border-2 border-zinc-300 dark:border-zinc-700 hover:border-zinc-400 rounded-lg font-medium transition-[color,border-color,transform] active:scale-[0.96] text-zinc-600 dark:text-zinc-400"
-          >
-            {t('dealModal.cancel')}
-          </button>
-          <button
-            onClick={handleSave}
-            className="flex-1 px-4 py-3 bg-accent hover:bg-accent/90 text-white rounded-lg font-bold transition-[background-color,transform] active:scale-[0.96]"
-          >
-            {editingDeal ? t('dealModal.save') : t('dealModal.addDeal')}
-          </button>
+          {step === 'form' ? (
+            <>
+              <button
+                onClick={closeModal}
+                className="flex-1 px-4 py-3 border-2 border-zinc-300 dark:border-zinc-700 hover:border-zinc-400 rounded-lg font-medium transition-[color,border-color,transform] active:scale-[0.96] text-zinc-600 dark:text-zinc-400"
+              >
+                {t('dealModal.cancel')}
+              </button>
+              <button
+                onClick={handleConfirm}
+                className="flex-1 px-4 py-3 bg-accent hover:bg-accent/90 text-white rounded-lg font-bold transition-[background-color,transform] active:scale-[0.96]"
+              >
+                {t('dealModal.confirm')}
+              </button>
+            </>
+          ) : (
+            <>
+              <button
+                onClick={() => setStep('form')}
+                className="flex-1 px-4 py-3 border-2 border-zinc-300 dark:border-zinc-700 hover:border-zinc-400 rounded-lg font-medium transition-[color,border-color,transform] active:scale-[0.96] text-zinc-600 dark:text-zinc-400"
+              >
+                {t('dealModal.backToEdit')}
+              </button>
+              <button
+                onClick={handleFinalSave}
+                className="flex-1 px-4 py-3 bg-accent hover:bg-accent/90 text-white rounded-lg font-bold transition-[background-color,transform] active:scale-[0.96]"
+              >
+                {editingDeal ? t('dealModal.save') : t('dealModal.addDeal')}
+              </button>
+            </>
+          )}
         </div>
       </div>
     </div>
